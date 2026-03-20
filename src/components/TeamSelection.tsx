@@ -1,18 +1,22 @@
 import { useState } from 'react';
-import type { TeamName } from '../data';
+import type { UserRole } from '../data';
 
 interface TeamSelectionProps {
-  onAuthenticate: (team: TeamName) => void;
+  onAuthenticate: (role: UserRole) => void;
 }
 
-const TEAM_CREDENTIALS: Record<string, { team: TeamName; password: string }> = {
+const TEAM_CREDENTIALS: Record<string, { role: UserRole; password: string }> = {
   'nishant ke favourite': {
-    team: 'Nishant Ke Favourite',
+    role: 'Nishant Ke Favourite',
     password: 'nkf-2026',
   },
   'kapil ke khaas': {
-    team: 'Kapil Ke Khaas',
+    role: 'Kapil Ke Khaas',
     password: 'kkk-2026',
+  },
+  admin: {
+    role: 'Admin',
+    password: 'admin',
   },
 };
 
@@ -23,6 +27,7 @@ const TEAM_ALIASES: Record<string, keyof typeof TEAM_CREDENTIALS> = {
   kapil: 'kapil ke khaas',
   kkk: 'kapil ke khaas',
   'kapil ke khaas': 'kapil ke khaas',
+  admin: 'admin',
 };
 
 export function TeamSelection({ onAuthenticate }: TeamSelectionProps) {
@@ -43,7 +48,7 @@ export function TeamSelection({ onAuthenticate }: TeamSelectionProps) {
     }
 
     setError('');
-    onAuthenticate(credential.team);
+    onAuthenticate(credential.role);
   };
 
   return (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from './useTheme';
-import { ROUNDS, type TeamName } from './data';
+import { ROUNDS, type UserRole } from './data';
 import { TeamSelection } from './components/TeamSelection';
 import { Header } from './components/Header';
 import { RoundTabs } from './components/RoundTabs';
@@ -8,13 +8,14 @@ import { RoundContent } from './components/RoundContent';
 
 function App() {
   const { theme, toggleTheme } = useTheme();
-  const [team, setTeam] = useState<TeamName | null>(() => {
-    return localStorage.getItem('ts-workshop-team') as TeamName | null;
+  const [team, setTeam] = useState<UserRole | null>(() => {
+    return localStorage.getItem('ts-workshop-team') as UserRole | null;
   });
-  const unlockedRounds = ROUNDS.filter((round) => round.unlocked);
+  const isAdmin = team === 'Admin';
+  const unlockedRounds = isAdmin ? ROUNDS : ROUNDS.filter((round) => round.unlocked);
   const [activeRound, setActiveRound] = useState(1);
 
-  const handleAuthenticateTeam = (authenticatedTeam: TeamName) => {
+  const handleAuthenticateTeam = (authenticatedTeam: UserRole) => {
     setTeam(authenticatedTeam);
     localStorage.setItem('ts-workshop-team', authenticatedTeam);
   };
@@ -47,7 +48,7 @@ function App() {
           onSelectRound={setActiveRound}
         />
         <div className="mt-6">
-          <RoundContent round={currentRound} team={team} />
+          <RoundContent round={currentRound} team={team} isAdmin={isAdmin} />
         </div>
       </main>
     </div>
