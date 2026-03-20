@@ -149,71 +149,72 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
     {
       id: 1,
       question:
-        "Build a fully typed generic function `first` that infers the element type correctly and handles readonly arrays as well.",
+        "Build a fully typed Search Filter React component that filters users by name (case insensitive) without using `any`.",
       codeSnippet:
-        "function first<T>(arr: readonly T[]): T | undefined {\n  return arr[0];\n}",
+        'type User = { id: number; name: string };\n\nfunction SearchFilter<T extends { id: number; name: string }>({\n  users,\n}: {\n  users: T[];\n}) {\n  const [query, setQuery] = React.useState("");\n\n  const filtered = React.useMemo(() => {\n    return users.filter((u) =>\n      u.name.toLowerCase().includes(query.toLowerCase())\n    );\n  }, [users, query]);\n\n  return (\n    <div>\n      <input\n        value={query}\n        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>\n          setQuery(e.target.value)\n        }\n      />\n      {filtered.map((u) => (\n        <div key={u.id}>{u.name}</div>\n      ))}\n    </div>\n  );\n}',
     },
     {
       id: 2,
       question:
-        "Explain how conditional types distribute over unions and modify this utility to prevent distribution.",
+        "Implement a strongly typed `useDynamicForm` hook where schema drives inferred value types and setter enforces correct types.",
       codeSnippet:
-        "type ToArray<T> = T extends any ? T[] : never;\n\n// Fix to prevent distribution\n// type ToArrayNonDist<T> = ?",
+        "type FieldMap = {\n  text: string;\n  number: number;\n  checkbox: boolean;\n};\n\ntype Schema = Record<string, { type: keyof FieldMap; default: unknown }>;\n\ntype InferValues<T extends Schema> = {\n  [K in keyof T]: FieldMap[T[K]['type']];\n};\n\nfunction useDynamicForm<T extends Schema>(schema: T) {\n  const initialValues = Object.keys(schema).reduce((acc, key) => {\n    const k = key as keyof T;\n    acc[k] = schema[k].default as InferValues<T>[typeof k];\n    return acc;\n  }, {} as InferValues<T>);\n\n  const [values, setValues] = React.useState(initialValues);\n\n  function setValue<K extends keyof T>(key: K, value: InferValues<T>[K]) {\n    setValues((prev) => ({ ...prev, [key]: value }));\n  }\n\n  function reset() {\n    setValues(initialValues);\n  }\n\n  return { values, setValue, reset };\n}",
     },
     {
       id: 3,
       question:
-        "Create a utility type `FunctionKeys<T>` that extracts only function property names from an object.",
+        "Build a typed multi-step form state machine using discriminated unions without `any`, `as`, or non-null assertions.",
       codeSnippet:
-        "type FunctionKeys<T> = {\n  [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never;\n}[keyof T];",
+        "type Step1Data = { name: string; age: number; email: string };\ntype Step2Data = { role: 'frontend' | 'backend' | 'fullstack'; experience: 'junior' | 'mid' | 'senior'; newsletter: boolean };\n\ntype FormStep =\n  | { step: 1; data: Step1Data }\n  | { step: 2; data: Step2Data }\n  | { step: 3; data: Step1Data & Step2Data };",
     },
     {
       id: 4,
       question:
-        "Build a reusable typed React Search Filter component that filters users by name (case insensitive) with no `any`.",
+        "Implement a generic `useStepState<T>` hook that manages form data and validation errors for each step.",
       codeSnippet:
-        'type User = { id: number; name: string };\n\nfunction SearchFilter<T extends { name: string }>({\n  data,\n}: {\n  data: T[];\n}) {\n  const [query, setQuery] = React.useState("");\n\n  const filtered = React.useMemo(() => {\n    return data.filter((item) =>\n      item.name.toLowerCase().includes(query.toLowerCase())\n    );\n  }, [data, query]);\n\n  return (\n    <div>\n      <input value={query} onChange={(e) => setQuery(e.target.value)} />\n      {filtered.map((u) => (\n        <div key={u.id}>{u.name}</div>\n      ))}\n    </div>\n  );\n}',
+        "function useStepState<T>(initial: T) {\n  const [data, setData] = React.useState<T>(initial);\n  const [errors, setErrors] = React.useState<Record<keyof T, string | undefined>>({} as Record<keyof T, string | undefined>);\n\n  function update<K extends keyof T>(key: K, value: T[K]) {\n    setData((prev) => ({ ...prev, [key]: value }));\n  }\n\n  return { data, errors, setErrors, update };\n}",
     },
     {
       id: 5,
       question:
-        "Implement a fully typed `useDynamicForm` hook where schema drives inferred value types and setters are type-safe.",
+        "Write a generic validation function that maps errors to the exact keys of the input type without using `any`.",
       codeSnippet:
-        "type FieldTypeMap = {\n  text: string;\n  number: number;\n  checkbox: boolean;\n};\n\ntype Schema = Record<string, { type: keyof FieldTypeMap; default: any }>;\n\ntype InferValues<T extends Schema> = {\n  [K in keyof T]: FieldTypeMap[T[K]['type']];\n};\n\nfunction useDynamicForm<T extends Schema>(schema: T) {\n  const [values, setValues] = React.useState<InferValues<T>>(\n    Object.fromEntries(\n      Object.entries(schema).map(([k, v]) => [k, v.default])\n    ) as InferValues<T>\n  );\n\n  function setValue<K extends keyof T>(key: K, value: InferValues<T>[K]) {\n    setValues((prev) => ({ ...prev, [key]: value }));\n  }\n\n  function reset() {\n    setValues(\n      Object.fromEntries(\n        Object.entries(schema).map(([k, v]) => [k, v.default])\n      ) as InferValues<T>\n    );\n  }\n\n  return { values, setValue, reset };\n}",
+        "function validate<T extends Record<string, unknown>>(data: T): Record<keyof T, string | undefined> {\n  const result = {} as Record<keyof T, string | undefined>;\n\n  for (const key in data) {\n    if (!data[key]) {\n      result[key] = 'Required';\n    }\n  }\n\n  return result;\n}",
     },
     {
       id: 6,
       question:
-        "Create a type-safe discriminated union API state handler with exhaustive checking.",
+        "Create a typed StepIndicator component using mapped types based on FormStep['step'].",
       codeSnippet:
-        "type ApiState<T> =\n  | { status: 'loading' }\n  | { status: 'success'; data: T }\n  | { status: 'error'; error: string };\n\nfunction handle<T>(state: ApiState<T>) {\n  switch (state.status) {\n    case 'loading':\n      return 'Loading';\n    case 'success':\n      return state.data;\n    case 'error':\n      return state.error;\n    default:\n      const _exhaustive: never = state;\n      return _exhaustive;\n  }\n}",
+        "type Steps = 1 | 2 | 3;\n\nconst stepLabels: Record<Steps, string> = {\n  1: 'Personal',\n  2: 'Preferences',\n  3: 'Review',\n};\n\nfunction StepIndicator({ current }: { current: Steps }) {\n  return (\n    <div>\n      {(Object.keys(stepLabels) as unknown as Steps[]).map((step) => (\n        <span key={step}>\n          {stepLabels[step]} {step === current ? '(active)' : ''}\n        </span>\n      ))}\n    </div>\n  );\n}",
     },
     {
       id: 7,
       question:
-        "Build a typed utility `Merge<A, B>` where B overrides A and validate it with conflicting keys.",
-      codeSnippet: "type Merge<A, B> = Omit<A, keyof B> & B;",
+        "Create a reusable TextBox component that only accepts text-like input types and supports all native handlers.",
+      codeSnippet:
+        "type InputType = 'text' | 'email' | 'search';\n\ntype TextBoxProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> & {\n  type?: InputType;\n};\n\nconst TextBox = React.forwardRef<HTMLInputElement, TextBoxProps>(\n  ({ type = 'text', ...rest }, ref) => {\n    return <input ref={ref} type={type} {...rest} />;\n  }\n);",
     },
     {
       id: 8,
       question:
-        "Implement a fully typed multi-step form state machine using discriminated unions (no `any`, no casting).",
+        "Ensure onChange is strictly typed and propagates correct value types in a controlled input component.",
       codeSnippet:
-        "type Step1 = { step: 1; data: { name: string; age: number; email: string } };\ntype Step2 = { step: 2; data: { role: 'frontend' | 'backend'; experience: 'junior' | 'mid'; newsletter: boolean } };\ntype Step3 = { step: 3; data: {} };\n\ntype FormStep = Step1 | Step2 | Step3;",
+        "type Props = {\n  value: string;\n  onChange: (value: string) => void;\n};\n\nfunction Input({ value, onChange }: Props) {\n  return (\n    <input\n      value={value}\n      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>\n        onChange(e.target.value)\n      }\n    />\n  );\n}",
     },
     {
       id: 9,
       question:
-        "Write a generic validation function that maps errors correctly to keys without using `any`.",
+        "Compose final submission data from multiple steps ensuring full type safety without casting.",
       codeSnippet:
-        "function validate<T>(data: T): Record<keyof T, string | undefined> {\n  const errors = {} as Record<keyof T, string | undefined>;\n  for (const key in data) {\n    if (!data[key]) {\n      errors[key] = 'Required';\n    }\n  }\n  return errors;\n}",
+        "function combine<A, B>(a: A, b: B): A & B {\n  return { ...a, ...b };\n}",
     },
     {
       id: 10,
       question:
-        "Create a reusable typed React TextBox component that accepts only text-like input types and supports all native handlers.",
+        "Handle step transitions with type-safe guards ensuring invalid transitions are impossible.",
       codeSnippet:
-        "type TextInputType = 'text' | 'email' | 'search';\n\ntype Props = Omit<\n  React.InputHTMLAttributes<HTMLInputElement>,\n  'type'\n> & {\n  type?: TextInputType;\n};\n\nconst TextBox: React.FC<Props> = ({ type = 'text', ...rest }) => {\n  return <input type={type} {...rest} />;\n};",
+        "function nextStep(step: FormStep): FormStep {\n  switch (step.step) {\n    case 1:\n      return { step: 2, data: { role: 'frontend', experience: 'junior', newsletter: false } };\n    case 2:\n      return { step: 3, data: { ...step.data } };\n    case 3:\n      return step;\n  }\n}",
     },
   ],
 };
@@ -439,72 +440,72 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
     {
       id: 1,
       question:
-        "Implement a generic function `last` that works with both mutable and readonly arrays while preserving type inference.",
+        "Implement a Virtualized List component in React with TypeScript that efficiently renders large datasets by only mounting visible items.",
       codeSnippet:
-        "function last<T>(arr: readonly T[]): T | undefined {\n  return arr[arr.length - 1];\n}",
+        'type Item = { id: number; text: string };\n\nfunction VirtualizedList<T extends { id: number }>({\n  items,\n  itemHeight,\n  height,\n  render,\n}: {\n  items: T[];\n  itemHeight: number;\n  height: number;\n  render: (item: T) => React.ReactNode;\n}) {\n  const [scrollTop, setScrollTop] = React.useState(0);\n\n  const startIndex = Math.floor(scrollTop / itemHeight);\n  const endIndex = Math.min(\n    items.length,\n    Math.ceil((scrollTop + height) / itemHeight)\n  );\n\n  const visibleItems = items.slice(startIndex, endIndex);\n\n  return (\n    <div\n      style={{ overflowY: "auto", height }}\n      onScroll={(e: React.UIEvent<HTMLDivElement>) =>\n        setScrollTop(e.currentTarget.scrollTop)\n      }\n    >\n      <div style={{ height: items.length * itemHeight, position: "relative" }}>\n        {visibleItems.map((item, idx) => (\n          <div\n            key={item.id}\n            style={{\n              position: "absolute",\n              top: (startIndex + idx) * itemHeight,\n              height: itemHeight,\n            }}\n          >\n            {render(item)}\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}',
     },
     {
       id: 2,
       question:
-        "What are the inferred types of A, B, and C? Explain how tuples behave in conditional types.",
+        "Build a type-safe state machine in TypeScript for a React component ensuring only valid transitions between states.",
       codeSnippet:
-        'type IsArray<T> = T extends any[] ? "array" : "other";\n\ntype A = IsArray<string[]>;\ntype B = IsArray<number>;\ntype C = IsArray<[string, number]>;',
+        'type State = "idle" | "loading" | "success" | "error";\n\ntype Event =\n  | { type: "FETCH" }\n  | { type: "RESOLVE" }\n  | { type: "REJECT" }\n  | { type: "RESET" };\n\nconst transitions: Record<State, Partial<Record<Event["type"], State>>> = {\n  idle: { FETCH: "loading" },\n  loading: { RESOLVE: "success", REJECT: "error" },\n  success: { RESET: "idle" },\n  error: { RESET: "idle" },\n};\n\nfunction reducer(state: State, event: Event): State {\n  return transitions[state][event.type] ?? state;\n}',
     },
     {
       id: 3,
       question:
-        "Implement a robust `DeepPartial<T>` that correctly handles arrays and avoids treating functions as objects.",
+        "Create a type-safe Event Emitter class in TypeScript supporting strongly typed event payloads.",
       codeSnippet:
-        "type DeepPartial<T> = {\n  [K in keyof T]?: T[K] extends Function\n    ? T[K]\n    : T[K] extends Array<infer U>\n    ? Array<DeepPartial<U>>\n    : T[K] extends object\n    ? DeepPartial<T[K]>\n    : T[K];\n};",
+        "type Events = {\n  message: { text: string };\n  close: void;\n};\n\nclass EventEmitter<E extends Record<string, any>> {\n  private listeners: {\n    [K in keyof E]?: ((payload: E[K]) => void)[];\n  } = {};\n\n  on<K extends keyof E>(event: K, cb: (payload: E[K]) => void) {\n    (this.listeners[event] ||= []).push(cb);\n  }\n\n  emit<K extends keyof E>(event: K, payload: E[K]) {\n    this.listeners[event]?.forEach((cb) => cb(payload));\n  }\n}",
     },
     {
       id: 4,
       question:
-        "Explain distributive vs non-distributive conditional types and compute A and B.",
+        "Build an Infinite Scroll component in React with TypeScript that fetches additional data on reaching the bottom.",
       codeSnippet:
-        'type Dist<T> = T extends string ? T[] : never;\ntype NoDist<T> = [T] extends [string] ? T[] : never;\n\ntype A = Dist<"a" | "b" | 1>;\ntype B = NoDist<"a" | "b" | 1>;',
+        'function InfiniteScroll<T>({\n  fetchMore,\n  render,\n}: {\n  fetchMore: () => Promise<T[]>;\n  render: (item: T) => React.ReactNode;\n}) {\n  const [items, setItems] = React.useState<T[]>([]);\n\n  const handleScroll = async (e: React.UIEvent<HTMLDivElement>) => {\n    const el = e.currentTarget;\n    if (el.scrollTop + el.clientHeight >= el.scrollHeight) {\n      const more = await fetchMore();\n      setItems((prev) => [...prev, ...more]);\n    }\n  };\n\n  return (\n    <div onScroll={handleScroll} style={{ overflowY: "auto", height: 400 }}>\n      {items.map(render)}\n    </div>\n  );\n}',
     },
     {
       id: 5,
       question:
-        "Create a utility type `ReadonlyKeys<T>` that extracts only readonly property keys.",
+        "Implement a dynamic form builder in React with TypeScript based on a configuration object with validation rules.",
       codeSnippet:
-        "type IfEquals<X, Y, A, B> =\n  (<T>() => T extends X ? 1 : 2) extends\n  (<T>() => T extends Y ? 1 : 2)\n    ? A\n    : B;\n\ntype ReadonlyKeys<T> = {\n  [K in keyof T]-?: IfEquals<\n    { [P in K]: T[K] },\n    { -readonly [P in K]: T[K] },\n    never,\n    K\n  >;\n}[keyof T];",
+        'type Field = {\n  name: string;\n  type: "text" | "number";\n  required?: boolean;\n};\n\nfunction DynamicForm({ fields }: { fields: Field[] }) {\n  const [values, setValues] = React.useState<Record<string, any>>({});\n\n  return (\n    <form>\n      {fields.map((f) => (\n        <input\n          key={f.name}\n          type={f.type}\n          onChange={(e) =>\n            setValues({ ...values, [f.name]: e.target.value })\n          }\n        />\n      ))}\n    </form>\n  );\n}',
     },
     {
       id: 6,
       question:
-        "Implement a constrained `Override<T, U>` that ensures only existing keys of T can be overridden.",
+        "Create a Tree View component in React with TypeScript supporting recursive rendering of nested nodes.",
       codeSnippet:
-        "type Override<T, U extends Partial<Record<keyof T, unknown>>> =\n  Omit<T, keyof U> & U;",
+        "type TreeNode = {\n  id: string;\n  name: string;\n  children?: TreeNode[];\n};\n\nfunction Tree({ node }: { node: TreeNode }) {\n  const [open, setOpen] = React.useState(false);\n\n  return (\n    <div>\n      <div onClick={() => setOpen((o) => !o)}>{node.name}</div>\n      {open &&\n        node.children?.map((child) => (\n          <Tree key={child.id} node={child} />\n        ))}\n    </div>\n  );\n}",
     },
     {
       id: 7,
       question:
-        "Write a reusable type guard `isError` for a discriminated union and use it to narrow types safely.",
+        "Implement a drag-and-drop list in React with TypeScript allowing reordering of items.",
       codeSnippet:
-        'interface Success { kind: "success"; data: unknown }\ninterface Failure { kind: "failure"; error: Error }\n\nfunction isError(x: Success | Failure): x is Failure {\n  return x.kind === "failure";\n}',
+        "type Item = { id: string; text: string };\n\nfunction DragList({ items }: { items: Item[] }) {\n  const [list, setList] = React.useState(items);\n\n  const onDrag = (from: number, to: number) => {\n    const updated = [...list];\n    const [moved] = updated.splice(from, 1);\n    updated.splice(to, 0, moved);\n    setList(updated);\n  };\n\n  return (\n    <div>\n      {list.map((item) => (\n        <div key={item.id} draggable>\n          {item.text}\n        </div>\n      ))}\n    </div>\n  );\n}",
     },
     {
       id: 8,
       question:
-        "Use `infer` to extract tuple parts and explain how pattern matching works.",
+        "Set up a fully typed Redux store in TypeScript with actions and reducers for a counter.",
       codeSnippet:
-        "type First<T> = T extends [infer F, ...any[]] ? F : never;\ntype Last<T> = T extends [...any[], infer L] ? L : never;\ntype Middle<T> = T extends [any, ...infer M, any] ? M : never;\n\ntype A = First<[1, 2, 3]>;\ntype B = Last<[1, 2, 3]>;\ntype C = Middle<[1, 2, 3]>;",
+        'type State = { count: number };\n\ntype Action = { type: "INC" } | { type: "DEC" };\n\nfunction reducer(state: State = { count: 0 }, action: Action): State {\n  switch (action.type) {\n    case "INC":\n      return { count: state.count + 1 };\n    case "DEC":\n      return { count: state.count - 1 };\n    default:\n      return state;\n  }\n}',
     },
     {
       id: 9,
       question:
-        "Model a fully type-safe network request state machine with exhaustive checks.",
+        "Build an accessible Modal component in React with TypeScript handling keyboard and focus management.",
       codeSnippet:
-        'type RequestState<T> =\n  | { state: "idle" }\n  | { state: "pending"; startedAt: number }\n  | { state: "fulfilled"; data: T; completedAt: number }\n  | { state: "rejected"; error: Error; retryCount: number };\n\nfunction handle<T>(req: RequestState<T>) {\n  switch (req.state) {\n    case "idle": return;\n    case "pending": return req.startedAt;\n    case "fulfilled": return req.data;\n    case "rejected": return req.error;\n    default: {\n      const _exhaustive: never = req;\n      return _exhaustive;\n    }\n  }\n}',
+        'function Modal({\n  isOpen,\n  onClose,\n  children,\n}: {\n  isOpen: boolean;\n  onClose: () => void;\n  children: React.ReactNode;\n}) {\n  React.useEffect(() => {\n    const onKey = (e: KeyboardEvent) => {\n      if (e.key === "Escape") onClose();\n    };\n    window.addEventListener("keydown", onKey);\n    return () => window.removeEventListener("keydown", onKey);\n  }, [onClose]);\n\n  if (!isOpen) return null;\n\n  return <div role="dialog">{children}</div>;\n}',
     },
     {
       id: 10,
       question:
-        "Generate strongly typed event handler names using template literal types and key remapping.",
+        "Create a typed React Router v6 setup ensuring route params are type-safe.",
       codeSnippet:
-        'type Events = "click" | "hover" | "focus";\n\ntype EventHandlers = {\n  [E in Events as `on${Capitalize<E>}`]: (event: E) => void;\n};',
+        "type UserParams = { id: string };\n\nfunction UserPage() {\n  const params = useParams<UserParams>();\n  return <div>User: {params.id}</div>;\n}",
     },
   ],
 };
