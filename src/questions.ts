@@ -145,6 +145,77 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
         "type Events = {\n  login: { userId: number };\n  logout: void;\n  error: { message: string; code: number };\n};\n\ndeclare function createEmitter<E>(): {\n  emit<K extends keyof E>(\n    event: K,\n    ...args: E[K] extends void ? [] : [payload: E[K]]\n  ): void;\n  on<K extends keyof E>(\n    event: K,\n    handler: E[K] extends void ? () => void : (payload: E[K]) => void\n  ): void;\n};\n\nconst emitter = createEmitter<Events>();",
     },
   ],
+  3: [
+    {
+      id: 1,
+      question:
+        "Build a fully typed generic function `first` that infers the element type correctly and handles readonly arrays as well.",
+      codeSnippet:
+        "function first<T>(arr: readonly T[]): T | undefined {\n  return arr[0];\n}",
+    },
+    {
+      id: 2,
+      question:
+        "Explain how conditional types distribute over unions and modify this utility to prevent distribution.",
+      codeSnippet:
+        "type ToArray<T> = T extends any ? T[] : never;\n\n// Fix to prevent distribution\n// type ToArrayNonDist<T> = ?",
+    },
+    {
+      id: 3,
+      question:
+        "Create a utility type `FunctionKeys<T>` that extracts only function property names from an object.",
+      codeSnippet:
+        "type FunctionKeys<T> = {\n  [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never;\n}[keyof T];",
+    },
+    {
+      id: 4,
+      question:
+        "Build a reusable typed React Search Filter component that filters users by name (case insensitive) with no `any`.",
+      codeSnippet:
+        'type User = { id: number; name: string };\n\nfunction SearchFilter<T extends { name: string }>({\n  data,\n}: {\n  data: T[];\n}) {\n  const [query, setQuery] = React.useState("");\n\n  const filtered = React.useMemo(() => {\n    return data.filter((item) =>\n      item.name.toLowerCase().includes(query.toLowerCase())\n    );\n  }, [data, query]);\n\n  return (\n    <div>\n      <input value={query} onChange={(e) => setQuery(e.target.value)} />\n      {filtered.map((u) => (\n        <div key={u.id}>{u.name}</div>\n      ))}\n    </div>\n  );\n}',
+    },
+    {
+      id: 5,
+      question:
+        "Implement a fully typed `useDynamicForm` hook where schema drives inferred value types and setters are type-safe.",
+      codeSnippet:
+        "type FieldTypeMap = {\n  text: string;\n  number: number;\n  checkbox: boolean;\n};\n\ntype Schema = Record<string, { type: keyof FieldTypeMap; default: any }>;\n\ntype InferValues<T extends Schema> = {\n  [K in keyof T]: FieldTypeMap[T[K]['type']];\n};\n\nfunction useDynamicForm<T extends Schema>(schema: T) {\n  const [values, setValues] = React.useState<InferValues<T>>(\n    Object.fromEntries(\n      Object.entries(schema).map(([k, v]) => [k, v.default])\n    ) as InferValues<T>\n  );\n\n  function setValue<K extends keyof T>(key: K, value: InferValues<T>[K]) {\n    setValues((prev) => ({ ...prev, [key]: value }));\n  }\n\n  function reset() {\n    setValues(\n      Object.fromEntries(\n        Object.entries(schema).map(([k, v]) => [k, v.default])\n      ) as InferValues<T>\n    );\n  }\n\n  return { values, setValue, reset };\n}",
+    },
+    {
+      id: 6,
+      question:
+        "Create a type-safe discriminated union API state handler with exhaustive checking.",
+      codeSnippet:
+        "type ApiState<T> =\n  | { status: 'loading' }\n  | { status: 'success'; data: T }\n  | { status: 'error'; error: string };\n\nfunction handle<T>(state: ApiState<T>) {\n  switch (state.status) {\n    case 'loading':\n      return 'Loading';\n    case 'success':\n      return state.data;\n    case 'error':\n      return state.error;\n    default:\n      const _exhaustive: never = state;\n      return _exhaustive;\n  }\n}",
+    },
+    {
+      id: 7,
+      question:
+        "Build a typed utility `Merge<A, B>` where B overrides A and validate it with conflicting keys.",
+      codeSnippet: "type Merge<A, B> = Omit<A, keyof B> & B;",
+    },
+    {
+      id: 8,
+      question:
+        "Implement a fully typed multi-step form state machine using discriminated unions (no `any`, no casting).",
+      codeSnippet:
+        "type Step1 = { step: 1; data: { name: string; age: number; email: string } };\ntype Step2 = { step: 2; data: { role: 'frontend' | 'backend'; experience: 'junior' | 'mid'; newsletter: boolean } };\ntype Step3 = { step: 3; data: {} };\n\ntype FormStep = Step1 | Step2 | Step3;",
+    },
+    {
+      id: 9,
+      question:
+        "Write a generic validation function that maps errors correctly to keys without using `any`.",
+      codeSnippet:
+        "function validate<T>(data: T): Record<keyof T, string | undefined> {\n  const errors = {} as Record<keyof T, string | undefined>;\n  for (const key in data) {\n    if (!data[key]) {\n      errors[key] = 'Required';\n    }\n  }\n  return errors;\n}",
+    },
+    {
+      id: 10,
+      question:
+        "Create a reusable typed React TextBox component that accepts only text-like input types and supports all native handlers.",
+      codeSnippet:
+        "type TextInputType = 'text' | 'email' | 'search';\n\ntype Props = Omit<\n  React.InputHTMLAttributes<HTMLInputElement>,\n  'type'\n> & {\n  type?: TextInputType;\n};\n\nconst TextBox: React.FC<Props> = ({ type = 'text', ...rest }) => {\n  return <input type={type} {...rest} />;\n};",
+    },
+  ],
 };
 
 const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
@@ -362,6 +433,78 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       codeSnippet:
         'type Events = "click" | "hover" | "focus";\n' +
         'type EventName = `on${Capitalize<Events>}`; // Should produce "onClick" | "onHover" | "onFocus"',
+    },
+  ],
+  3: [
+    {
+      id: 1,
+      question:
+        "Implement a generic function `last` that works with both mutable and readonly arrays while preserving type inference.",
+      codeSnippet:
+        "function last<T>(arr: readonly T[]): T | undefined {\n  return arr[arr.length - 1];\n}",
+    },
+    {
+      id: 2,
+      question:
+        "What are the inferred types of A, B, and C? Explain how tuples behave in conditional types.",
+      codeSnippet:
+        'type IsArray<T> = T extends any[] ? "array" : "other";\n\ntype A = IsArray<string[]>;\ntype B = IsArray<number>;\ntype C = IsArray<[string, number]>;',
+    },
+    {
+      id: 3,
+      question:
+        "Implement a robust `DeepPartial<T>` that correctly handles arrays and avoids treating functions as objects.",
+      codeSnippet:
+        "type DeepPartial<T> = {\n  [K in keyof T]?: T[K] extends Function\n    ? T[K]\n    : T[K] extends Array<infer U>\n    ? Array<DeepPartial<U>>\n    : T[K] extends object\n    ? DeepPartial<T[K]>\n    : T[K];\n};",
+    },
+    {
+      id: 4,
+      question:
+        "Explain distributive vs non-distributive conditional types and compute A and B.",
+      codeSnippet:
+        'type Dist<T> = T extends string ? T[] : never;\ntype NoDist<T> = [T] extends [string] ? T[] : never;\n\ntype A = Dist<"a" | "b" | 1>;\ntype B = NoDist<"a" | "b" | 1>;',
+    },
+    {
+      id: 5,
+      question:
+        "Create a utility type `ReadonlyKeys<T>` that extracts only readonly property keys.",
+      codeSnippet:
+        "type IfEquals<X, Y, A, B> =\n  (<T>() => T extends X ? 1 : 2) extends\n  (<T>() => T extends Y ? 1 : 2)\n    ? A\n    : B;\n\ntype ReadonlyKeys<T> = {\n  [K in keyof T]-?: IfEquals<\n    { [P in K]: T[K] },\n    { -readonly [P in K]: T[K] },\n    never,\n    K\n  >;\n}[keyof T];",
+    },
+    {
+      id: 6,
+      question:
+        "Implement a constrained `Override<T, U>` that ensures only existing keys of T can be overridden.",
+      codeSnippet:
+        "type Override<T, U extends Partial<Record<keyof T, unknown>>> =\n  Omit<T, keyof U> & U;",
+    },
+    {
+      id: 7,
+      question:
+        "Write a reusable type guard `isError` for a discriminated union and use it to narrow types safely.",
+      codeSnippet:
+        'interface Success { kind: "success"; data: unknown }\ninterface Failure { kind: "failure"; error: Error }\n\nfunction isError(x: Success | Failure): x is Failure {\n  return x.kind === "failure";\n}',
+    },
+    {
+      id: 8,
+      question:
+        "Use `infer` to extract tuple parts and explain how pattern matching works.",
+      codeSnippet:
+        "type First<T> = T extends [infer F, ...any[]] ? F : never;\ntype Last<T> = T extends [...any[], infer L] ? L : never;\ntype Middle<T> = T extends [any, ...infer M, any] ? M : never;\n\ntype A = First<[1, 2, 3]>;\ntype B = Last<[1, 2, 3]>;\ntype C = Middle<[1, 2, 3]>;",
+    },
+    {
+      id: 9,
+      question:
+        "Model a fully type-safe network request state machine with exhaustive checks.",
+      codeSnippet:
+        'type RequestState<T> =\n  | { state: "idle" }\n  | { state: "pending"; startedAt: number }\n  | { state: "fulfilled"; data: T; completedAt: number }\n  | { state: "rejected"; error: Error; retryCount: number };\n\nfunction handle<T>(req: RequestState<T>) {\n  switch (req.state) {\n    case "idle": return;\n    case "pending": return req.startedAt;\n    case "fulfilled": return req.data;\n    case "rejected": return req.error;\n    default: {\n      const _exhaustive: never = req;\n      return _exhaustive;\n    }\n  }\n}',
+    },
+    {
+      id: 10,
+      question:
+        "Generate strongly typed event handler names using template literal types and key remapping.",
+      codeSnippet:
+        'type Events = "click" | "hover" | "focus";\n\ntype EventHandlers = {\n  [E in Events as `on${Capitalize<E>}`]: (event: E) => void;\n};',
     },
   ],
 };
