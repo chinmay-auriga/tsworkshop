@@ -3,7 +3,8 @@ import { useTheme } from './useTheme';
 import { ROUNDS, type UserRole } from './data';
 import { TeamSelection } from './components/TeamSelection';
 import { Header } from './components/Header';
-import { RoundTabs } from './components/RoundTabs';
+import { RoundTabs, type ActiveTab } from './components/RoundTabs';
+import { Itinerary } from './components/Itinerary';
 import { RoundContent } from './components/RoundContent';
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
   });
   const isAdmin = team === 'Admin';
   const unlockedRounds = isAdmin ? ROUNDS : ROUNDS.filter((round) => round.unlocked);
-  const [activeRound, setActiveRound] = useState(1);
+  const [activeTab, setActiveTab] = useState<ActiveTab>('itinerary');
 
   const handleAuthenticateTeam = (authenticatedTeam: UserRole) => {
     setTeam(authenticatedTeam);
@@ -24,15 +25,9 @@ function App() {
     return <TeamSelection onAuthenticate={handleAuthenticateTeam} />;
   }
 
-  const currentRound = unlockedRounds.find((round) => round.id === activeRound) ?? unlockedRounds[0];
-
-  if (!currentRound) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4 text-center">
-        <p className="text-gray-600 dark:text-gray-300">No rounds are unlocked right now.</p>
-      </div>
-    );
-  }
+  const currentRound = typeof activeTab === 'number'
+    ? unlockedRounds.find((round) => round.id === activeTab) ?? unlockedRounds[0]
+    : null;
 
   return (
     <div className="min-h-screen">
@@ -44,11 +39,17 @@ function App() {
       <main className="max-w-5xl mx-auto px-4 py-8">
         <RoundTabs
           rounds={unlockedRounds}
-          activeRound={activeRound}
-          onSelectRound={setActiveRound}
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
         />
         <div className="mt-6">
-          <RoundContent round={currentRound} team={team} isAdmin={isAdmin} />
+          {activeTab === 'itinerary' ? (
+            <Itinerary />
+          ) : currentRound ? (
+            <RoundContent round={currentRound} team={team} isAdmin={isAdmin} />
+          ) : (
+            <p className="text-center text-gray-500 dark:text-gray-400 py-16">No rounds are unlocked right now.</p>
+          )}
         </div>
       </main>
     </div>
