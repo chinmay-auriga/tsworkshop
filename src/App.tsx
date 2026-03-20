@@ -1,33 +1,33 @@
 import { useState } from 'react';
 import { useTheme } from './useTheme';
-import { ROUNDS, type TeamName } from './data';
+import { ROUNDS, type UserRole } from './data';
 import { TeamSelection } from './components/TeamSelection';
 import { Header } from './components/Header';
-import { RoundTabs } from './components/RoundTabs';
+import { RoundTabs, type ActiveTab } from './components/RoundTabs';
+import { Itinerary } from './components/Itinerary';
 import { RoundContent } from './components/RoundContent';
 
 function App() {
   const { theme, toggleTheme } = useTheme();
-  const [team, setTeam] = useState<TeamName | null>(() => {
-    return localStorage.getItem('ts-workshop-team') as TeamName | null;
+  const [team, setTeam] = useState<UserRole | null>(() => {
+    return localStorage.getItem('ts-workshop-team') as UserRole | null;
   });
-  const [activeRound, setActiveRound] = useState(1);
+  const isAdmin = team === 'Admin';
+  const unlockedRounds = isAdmin ? ROUNDS : ROUNDS.filter((round) => round.unlocked);
+  const [activeTab, setActiveTab] = useState<ActiveTab>('itinerary');
 
-  const handleSelectTeam = (selected: TeamName) => {
-    setTeam(selected);
-    localStorage.setItem('ts-workshop-team', selected);
-  };
-
-  const handleChangeTeam = () => {
-    setTeam(null);
-    localStorage.removeItem('ts-workshop-team');
+  const handleAuthenticateTeam = (authenticatedTeam: UserRole) => {
+    setTeam(authenticatedTeam);
+    localStorage.setItem('ts-workshop-team', authenticatedTeam);
   };
 
   if (!team) {
-    return <TeamSelection onSelect={handleSelectTeam} />;
+    return <TeamSelection onAuthenticate={handleAuthenticateTeam} />;
   }
 
-  const currentRound = ROUNDS.find((r) => r.id === activeRound)!;
+  const currentRound = typeof activeTab === 'number'
+    ? unlockedRounds.find((round) => round.id === activeTab) ?? unlockedRounds[0]
+    : null;
 
   return (
     <div className="min-h-screen">
@@ -35,16 +35,21 @@ function App() {
         team={team}
         theme={theme}
         onToggleTheme={toggleTheme}
-        onChangeTeam={handleChangeTeam}
       />
       <main className="max-w-5xl mx-auto px-4 py-8">
         <RoundTabs
-          rounds={ROUNDS}
-          activeRound={activeRound}
-          onSelectRound={setActiveRound}
+          rounds={unlockedRounds}
+          activeTab={activeTab}
+          onSelectTab={setActiveTab}
         />
         <div className="mt-6">
-          <RoundContent round={currentRound} />
+          {activeTab === 'itinerary' ? (
+            <Itinerary />
+          ) : currentRound ? (
+            <RoundContent round={currentRound} team={team} isAdmin={isAdmin} />
+          ) : (
+            <p className="text-center text-gray-500 dark:text-gray-400 py-16">No rounds are unlocked right now.</p>
+          )}
         </div>
       </main>
     </div>

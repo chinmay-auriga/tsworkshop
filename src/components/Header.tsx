@@ -1,14 +1,14 @@
-import type { TeamName } from '../data';
+import type { UserRole } from '../data';
 import { ThemeToggle } from './ThemeToggle';
 
 interface HeaderProps {
-  team: TeamName;
+  team: UserRole;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
-  onChangeTeam: () => void;
 }
 
-export function Header({ team, theme, onToggleTheme, onChangeTeam }: HeaderProps) {
+export function Header({ team, theme, onToggleTheme }: HeaderProps) {
+  const isAdmin = team === 'Admin';
   const isBlueTeam = team === 'Nishant Ke Favourite';
 
   return (
@@ -21,9 +21,11 @@ export function Header({ team, theme, onToggleTheme, onChangeTeam }: HeaderProps
           <div
             className={`
               px-3 py-1 rounded-full text-xs font-bold
-              ${isBlueTeam
-                ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
-                : 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400'
+              ${isAdmin
+                ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400'
+                : isBlueTeam
+                  ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
+                  : 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400'
               }
             `}
           >
@@ -32,12 +34,6 @@ export function Header({ team, theme, onToggleTheme, onChangeTeam }: HeaderProps
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={onChangeTeam}
-            className="text-sm px-3 py-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-          >
-            Switch Team
-          </button>
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
       </div>
