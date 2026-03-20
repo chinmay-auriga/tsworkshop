@@ -7,6 +7,14 @@ export interface Round {
   unlocked: boolean;
 }
 
+export interface RoundQuestion {
+  id: number;
+  question: string;
+  codeSnippet?: string;
+}
+
+export { TEAM_ROUND_QUESTIONS } from './questions';
+
 export const ROUNDS: Round[] = [
   {
     id: 1,

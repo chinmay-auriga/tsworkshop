@@ -11,23 +11,27 @@ function App() {
   const [team, setTeam] = useState<TeamName | null>(() => {
     return localStorage.getItem('ts-workshop-team') as TeamName | null;
   });
+  const unlockedRounds = ROUNDS.filter((round) => round.unlocked);
   const [activeRound, setActiveRound] = useState(1);
 
-  const handleSelectTeam = (selected: TeamName) => {
-    setTeam(selected);
-    localStorage.setItem('ts-workshop-team', selected);
-  };
-
-  const handleChangeTeam = () => {
-    setTeam(null);
-    localStorage.removeItem('ts-workshop-team');
+  const handleAuthenticateTeam = (authenticatedTeam: TeamName) => {
+    setTeam(authenticatedTeam);
+    localStorage.setItem('ts-workshop-team', authenticatedTeam);
   };
 
   if (!team) {
-    return <TeamSelection onSelect={handleSelectTeam} />;
+    return <TeamSelection onAuthenticate={handleAuthenticateTeam} />;
   }
 
-  const currentRound = ROUNDS.find((r) => r.id === activeRound)!;
+  const currentRound = unlockedRounds.find((round) => round.id === activeRound) ?? unlockedRounds[0];
+
+  if (!currentRound) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4 text-center">
+        <p className="text-gray-600 dark:text-gray-300">No rounds are unlocked right now.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -35,16 +39,15 @@ function App() {
         team={team}
         theme={theme}
         onToggleTheme={toggleTheme}
-        onChangeTeam={handleChangeTeam}
       />
       <main className="max-w-5xl mx-auto px-4 py-8">
         <RoundTabs
-          rounds={ROUNDS}
+          rounds={unlockedRounds}
           activeRound={activeRound}
           onSelectRound={setActiveRound}
         />
         <div className="mt-6">
-          <RoundContent round={currentRound} />
+          <RoundContent round={currentRound} team={team} />
         </div>
       </main>
     </div>

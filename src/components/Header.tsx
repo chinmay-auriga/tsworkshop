@@ -5,10 +5,9 @@ interface HeaderProps {
   team: TeamName;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
-  onChangeTeam: () => void;
 }
 
-export function Header({ team, theme, onToggleTheme, onChangeTeam }: HeaderProps) {
+export function Header({ team, theme, onToggleTheme }: HeaderProps) {
   const isBlueTeam = team === 'Nishant Ke Favourite';
 
   return (
@@ -32,12 +31,6 @@ export function Header({ team, theme, onToggleTheme, onChangeTeam }: HeaderProps
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={onChangeTeam}
-            className="text-sm px-3 py-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-          >
-            Switch Team
-          </button>
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
       </div>
