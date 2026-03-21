@@ -4,6 +4,7 @@ import { ROUNDS, type UserRole, type TeamName } from './data';
 import { TeamSelection } from './components/TeamSelection';
 import { Header } from './components/Header';
 import { RoundTabs, type ActiveTab } from './components/RoundTabs';
+import { LiveStatus } from './components/LiveStatus';
 import { Itinerary } from './components/Itinerary';
 import { RoundContent } from './components/RoundContent';
 import { OtherTeamQuestions } from './components/OtherTeamQuestions';
@@ -49,6 +50,7 @@ function App() {
         onLogout={handleLogout}
       />
       <main className="max-w-5xl mx-auto px-4 py-8">
+        <LiveStatus />
         <RoundTabs
           rounds={unlockedRounds}
           activeTab={activeTab}
