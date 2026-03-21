@@ -5,10 +5,10 @@ export const SCHEDULE = [
   { time: '12:30 PM – 12:40 PM', label: 'Break', description: '', type: 'break' as const },
   { time: '12:40 PM – 2:20 PM', label: 'Round 2', description: 'Advanced Type Patterns & Scenarios', type: 'round' as const },
   { time: '2:20 PM – 3:30 PM', label: 'Lunch Break', description: '', type: 'break' as const },
-  { time: '3:30 PM – 4:30 PM', label: 'Round 3', description: 'React + TypeScript Coding Challenge', type: 'round' as const },
-  { time: '4:30 PM – 4:40 PM', label: 'Break', description: '', type: 'break' as const },
-  { time: '4:40 PM – 5:30 PM', label: 'Round 4', description: 'TypeScript Configuration Mastery', type: 'round' as const },
-  { time: '5:30 PM – 10:00 PM', label: 'Round 5', description: 'Full Integration Challenge(Take Home Assignments)', type: 'round' as const },
+  { time: '3:30 PM – 6:00 PM', label: 'Round 3', description: 'React + TypeScript Coding Challenge', type: 'round' as const },
+  { time: '6:00 PM – 6:10 PM', label: 'Break', description: '', type: 'break' as const },
+  { time: '6:10 PM – 7:00 PM', label: 'Round 4', description: 'TypeScript Configuration Mastery', type: 'round' as const },
+  { time: '7:00 PM – 10:00 PM', label: 'Round 5', description: 'Full Integration Challenge(Take Home Assignments)', type: 'round' as const },
 ];
 
 export function parseTime(timeStr: string): number {
