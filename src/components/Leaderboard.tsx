@@ -11,6 +11,7 @@ const SCORES: TeamScore[] = [
     rounds: [
       { round: 1, score: 10 },
       { round: 2, score: 0 },
+      { round: 3, score: 10 },
     ],
   },
   {
@@ -18,6 +19,7 @@ const SCORES: TeamScore[] = [
     rounds: [
       { round: 1, score: 0 },
       { round: 2, score: 20 },
+      { round: 3, score: 10 },
     ],
   },
 ];
