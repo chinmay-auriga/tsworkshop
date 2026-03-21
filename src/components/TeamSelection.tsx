@@ -101,12 +101,25 @@ export function TeamSelection({ onAuthenticate }: TeamSelectionProps) {
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 transition-colors cursor-pointer"
+            className="w-full rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer"
           >
-            Sign in
+            Login
           </button>
         </div>
       </form>
+
+      <div className="mt-4 w-full max-w-md text-center">
+        <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">or</p>
+        <button
+          onClick={() => onAuthenticate('Guest')}
+          className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-800/90 px-4 py-2.5 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer flex items-center justify-center gap-2"
+        >
+          <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-yellow-500" stroke="currentColor" strokeWidth="2">
+            <path d="M12 2l3 7h7l-5.5 4.5 2 7L12 16l-6.5 4.5 2-7L2 9h7z" fill="currentColor" />
+          </svg>
+          Continue as Guest — View Leaderboard
+        </button>
+      </div>
     </div>
   );
 }

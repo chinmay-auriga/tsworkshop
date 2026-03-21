@@ -1,5 +1,5 @@
 export type TeamName = 'Kapil Ke Khaas' | 'Nishant Ke Favourite';
-export type UserRole = TeamName | 'Admin';
+export type UserRole = TeamName | 'Admin' | 'Guest';
 
 export interface Round {
   id: number;
