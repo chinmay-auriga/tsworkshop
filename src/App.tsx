@@ -21,6 +21,11 @@ function App() {
     localStorage.setItem('ts-workshop-team', authenticatedTeam);
   };
 
+  const handleLogout = () => {
+    setTeam(null);
+    localStorage.removeItem('ts-workshop-team');
+  };
+
   if (!team) {
     return <TeamSelection onAuthenticate={handleAuthenticateTeam} />;
   }
@@ -35,6 +40,7 @@ function App() {
         team={team}
         theme={theme}
         onToggleTheme={toggleTheme}
+        onLogout={handleLogout}
       />
       <main className="max-w-5xl mx-auto px-4 py-8">
         <RoundTabs

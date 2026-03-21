@@ -20,8 +20,6 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 3,
       question:
         "Explain the difference between `never` and `void`. Provide examples of when each should be used.",
-      codeSnippet:
-        "function logMessage(msg: string): void {\n  console.log(msg);\n}\n\nfunction throwError(msg: string): never {\n  throw new Error(msg);\n}",
     },
     {
       id: 4,
@@ -34,8 +32,6 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 5,
       question:
         "Write a function `getLength` that accepts either a string or an array and returns its length. How does TypeScript allow safe access without narrowing?",
-      codeSnippet:
-        "function getLength(input: string | any[]): number {\n  return input.length;\n}",
     },
     {
       id: 6,
@@ -69,8 +65,6 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 10,
       question:
         "Create a generic utility type `Nullable<T>` and demonstrate its usage. How does it differ from optional properties?",
-      codeSnippet:
-        'type Nullable<T> = T | null | undefined;\n\nlet username: Nullable<string>;\nusername = "Neha";\nusername = null;\nusername = undefined;\n// username = 42;',
     },
   ],
   2: [
@@ -78,8 +72,6 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 1,
       question:
         "Implement a generic function `first` that takes an array of any type and returns the first element, with the correct return type inferred automatically.",
-      codeSnippet:
-        "function first<T>(arr: T[]): T | undefined {\n  return arr[0];\n}",
     },
     {
       id: 2,
@@ -92,8 +84,6 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 3,
       question:
         "Implement a recursive type `DeepReadonly<T>` that makes all nested properties readonly, not just the top-level ones.",
-      codeSnippet:
-        "interface AppState {\n  user: {\n    name: string;\n    settings: {\n      theme: string;\n      notifications: boolean;\n    };\n  };\n  items: string[];\n}\n\ntype DeepReadonly<T> = {\n  readonly [K in keyof T]: T[K] extends object\n    ? DeepReadonly<T[K]>\n    : T[K];\n};",
     },
     {
       id: 4,
@@ -106,22 +96,16 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 5,
       question:
         "Create a type `FunctionKeys<T>` that extracts only the keys of `T` whose values are functions.",
-      codeSnippet:
-        "interface API {\n  baseUrl: string;\n  timeout: number;\n  fetchUser: (id: number) => Promise<User>;\n  fetchPosts: () => Promise<Post[]>;\n  retryCount: number;\n}\n\ntype FunctionKeys<T> = {\n  [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never;\n}[keyof T];",
     },
     {
       id: 6,
       question:
         "Write a generic type `Merge<A, B>` that merges two object types, with `B` overriding overlapping properties from `A`.",
-      codeSnippet:
-        'type Merge<A, B> = Omit<A, keyof B> & B;\n\ninterface Defaults {\n  color: string;\n  size: number;\n  visible: boolean;\n}\n\ninterface Overrides {\n  color: "red" | "blue";\n  opacity: number;\n}\n\ntype Final = Merge<Defaults, Overrides>;',
     },
     {
       id: 7,
       question:
         "Write a generic type guard function `isNonNull` that removes `null` and `undefined` from any type `T`, and explain how it helps with array filtering.",
-      codeSnippet:
-        'function isNonNull<T>(val: T): val is NonNullable<T> {\n  return val !== null && val !== undefined;\n}\n\nconst items: (string | null | undefined)[] = ["a", null, "b", undefined];\nconst filtered = items.filter(isNonNull);',
     },
     {
       id: 8,
@@ -134,15 +118,11 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 9,
       question:
         "Create a discriminated union for API response states and write a function that handles all cases with exhaustive checking so invalid states are caught at compile time.",
-      codeSnippet:
-        'type ApiResponse<T> =\n  | { status: "loading" }\n  | { status: "success"; data: T }\n  | { status: "error"; error: string };\n\nfunction handleResponse(res: ApiResponse<User>): string {\n  switch (res.status) {\n    case "loading":\n      return "Loading...";\n    case "success":\n      return res.data.name;\n    case "error":\n      return res.error;\n    default: {\n      const _exhaustive: never = res;\n      return _exhaustive;\n    }\n  }\n}',
     },
     {
       id: 10,
       question:
         "Create a strongly typed event emitter where `emit` enforces the correct payload for each event and `on` automatically infers the correct payload type for each handler. Payload should be required for events that need it and disallowed for `void` events.",
-      codeSnippet:
-        "type Events = {\n  login: { userId: number };\n  logout: void;\n  error: { message: string; code: number };\n};\n\ndeclare function createEmitter<E>(): {\n  emit<K extends keyof E>(\n    event: K,\n    ...args: E[K] extends void ? [] : [payload: E[K]]\n  ): void;\n  on<K extends keyof E>(\n    event: K,\n    handler: E[K] extends void ? () => void : (payload: E[K]) => void\n  ): void;\n};\n\nconst emitter = createEmitter<Events>();",
     },
   ],
   3: [
@@ -150,64 +130,46 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 1,
       question:
         "Build a fully typed Search Filter React component that filters users by name (case insensitive) without using `any`.",
-      codeSnippet:
-        'type User = { id: number; name: string };\n\nfunction SearchFilter<T extends { id: number; name: string }>({\n  users,\n}: {\n  users: T[];\n}) {\n  const [query, setQuery] = React.useState("");\n\n  const filtered = React.useMemo(() => {\n    return users.filter((u) =>\n      u.name.toLowerCase().includes(query.toLowerCase())\n    );\n  }, [users, query]);\n\n  return (\n    <div>\n      <input\n        value={query}\n        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>\n          setQuery(e.target.value)\n        }\n      />\n      {filtered.map((u) => (\n        <div key={u.id}>{u.name}</div>\n      ))}\n    </div>\n  );\n}',
     },
     {
       id: 2,
       question:
         "Implement a strongly typed `useDynamicForm` hook where schema drives inferred value types and setter enforces correct types.",
-      codeSnippet:
-        "type FieldMap = {\n  text: string;\n  number: number;\n  checkbox: boolean;\n};\n\ntype Schema = Record<string, { type: keyof FieldMap; default: unknown }>;\n\ntype InferValues<T extends Schema> = {\n  [K in keyof T]: FieldMap[T[K]['type']];\n};\n\nfunction useDynamicForm<T extends Schema>(schema: T) {\n  const initialValues = Object.keys(schema).reduce((acc, key) => {\n    const k = key as keyof T;\n    acc[k] = schema[k].default as InferValues<T>[typeof k];\n    return acc;\n  }, {} as InferValues<T>);\n\n  const [values, setValues] = React.useState(initialValues);\n\n  function setValue<K extends keyof T>(key: K, value: InferValues<T>[K]) {\n    setValues((prev) => ({ ...prev, [key]: value }));\n  }\n\n  function reset() {\n    setValues(initialValues);\n  }\n\n  return { values, setValue, reset };\n}",
     },
     {
       id: 3,
       question:
         "Build a typed multi-step form state machine using discriminated unions without `any`, `as`, or non-null assertions.",
-      codeSnippet:
-        "type Step1Data = { name: string; age: number; email: string };\ntype Step2Data = { role: 'frontend' | 'backend' | 'fullstack'; experience: 'junior' | 'mid' | 'senior'; newsletter: boolean };\n\ntype FormStep =\n  | { step: 1; data: Step1Data }\n  | { step: 2; data: Step2Data }\n  | { step: 3; data: Step1Data & Step2Data };",
     },
     {
       id: 4,
       question:
         "Implement a generic `useStepState<T>` hook that manages form data and validation errors for each step.",
-      codeSnippet:
-        "function useStepState<T>(initial: T) {\n  const [data, setData] = React.useState<T>(initial);\n  const [errors, setErrors] = React.useState<Record<keyof T, string | undefined>>({} as Record<keyof T, string | undefined>);\n\n  function update<K extends keyof T>(key: K, value: T[K]) {\n    setData((prev) => ({ ...prev, [key]: value }));\n  }\n\n  return { data, errors, setErrors, update };\n}",
     },
     {
       id: 5,
       question:
         "Write a generic validation function that maps errors to the exact keys of the input type without using `any`.",
-      codeSnippet:
-        "function validate<T extends Record<string, unknown>>(data: T): Record<keyof T, string | undefined> {\n  const result = {} as Record<keyof T, string | undefined>;\n\n  for (const key in data) {\n    if (!data[key]) {\n      result[key] = 'Required';\n    }\n  }\n\n  return result;\n}",
     },
     {
       id: 6,
       question:
         "Create a typed StepIndicator component using mapped types based on FormStep['step'].",
-      codeSnippet:
-        "type Steps = 1 | 2 | 3;\n\nconst stepLabels: Record<Steps, string> = {\n  1: 'Personal',\n  2: 'Preferences',\n  3: 'Review',\n};\n\nfunction StepIndicator({ current }: { current: Steps }) {\n  return (\n    <div>\n      {(Object.keys(stepLabels) as unknown as Steps[]).map((step) => (\n        <span key={step}>\n          {stepLabels[step]} {step === current ? '(active)' : ''}\n        </span>\n      ))}\n    </div>\n  );\n}",
     },
     {
       id: 7,
       question:
         "Create a reusable TextBox component that only accepts text-like input types and supports all native handlers.",
-      codeSnippet:
-        "type InputType = 'text' | 'email' | 'search';\n\ntype TextBoxProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> & {\n  type?: InputType;\n};\n\nconst TextBox = React.forwardRef<HTMLInputElement, TextBoxProps>(\n  ({ type = 'text', ...rest }, ref) => {\n    return <input ref={ref} type={type} {...rest} />;\n  }\n);",
     },
     {
       id: 8,
       question:
         "Ensure onChange is strictly typed and propagates correct value types in a controlled input component.",
-      codeSnippet:
-        "type Props = {\n  value: string;\n  onChange: (value: string) => void;\n};\n\nfunction Input({ value, onChange }: Props) {\n  return (\n    <input\n      value={value}\n      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>\n        onChange(e.target.value)\n      }\n    />\n  );\n}",
     },
     {
       id: 9,
       question:
         "Compose final submission data from multiple steps ensuring full type safety without casting.",
-      codeSnippet:
-        "function combine<A, B>(a: A, b: B): A & B {\n  return { ...a, ...b };\n}",
     },
     {
       id: 10,
@@ -339,15 +301,11 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 9,
       question:
         "Implement a generic DeepReadonly<T> that recursively makes all nested properties readonly.",
-      codeSnippet:
-        "type DeepReadonly<T> = {\n  readonly [K in keyof T]: T[K] extends object\n    ? DeepReadonly<T[K]>\n    : T[K];\n};",
     },
     {
       id: 10,
       question:
         "Implement a generic DeepPartial<T> that recursively makes all nested properties optional.",
-      codeSnippet:
-        "type DeepPartial<T> = {\n  [K in keyof T]?: T[K] extends object\n    ? DeepPartial<T[K]>\n    : T[K];\n};",
     },
   ],
   2: [
@@ -355,8 +313,6 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 1,
       question:
         "Implement a generic function `last` that takes an array of any type and returns the last element with correct type inference.",
-      codeSnippet:
-        "function last<T>(arr: T[]): T | undefined {\n  return arr[arr.length - 1];\n}",
     },
     {
       id: 2,
@@ -372,22 +328,6 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 3,
       question:
         "Implement a `DeepPartial<T>` type that makes ALL nested properties optional recursively.",
-      codeSnippet:
-        "interface FormData {\n" +
-        "  user: {\n" +
-        "    name: string;\n" +
-        "    address: {\n" +
-        "      city: string;\n" +
-        "      zip: number;\n" +
-        "    };\n" +
-        "  };\n" +
-        "  agreed: boolean;\n" +
-        "}\n\n" +
-        "type DeepPartial<T> = {\n" +
-        "  [K in keyof T]?: T[K] extends object\n" +
-        "    ? DeepPartial<T[K]>\n" +
-        "    : T[K];\n" +
-        "};",
     },
     {
       id: 4,
@@ -403,49 +343,16 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 5,
       question:
         "Create a type `ReadonlyKeys<T>` that extracts only the keys of `T` that are readonly.",
-      codeSnippet:
-        "interface Mixed {\n" +
-        "  readonly id: number;\n" +
-        "  name: string;\n" +
-        "  readonly createdAt: Date;\n" +
-        "  updatedAt: Date;\n" +
-        "}\n\n" +
-        "type ReadonlyKeys<T> = {\n" +
-        "  [K in keyof T]-?: (<V>() => V extends { [P in K]: T[K] } ? 1 : 2) extends\n" +
-        "    (<V>() => V extends { -readonly [P in K]: T[K] } ? 1 : 2)\n" +
-        "    ? never\n" +
-        "    : K;\n" +
-        "}[keyof T];",
     },
     {
       id: 6,
       question:
         "Write a type `Override<T, U>` that takes type `T` and overrides only the matching keys with types from `U`, keeping the rest unchanged.",
-      codeSnippet:
-        "type Override<T, U extends Partial<Record<keyof T, any>>> = Omit<T, keyof U> & U;\n\n" +
-        "interface BaseConfig {\n" +
-        "  host: string;\n" +
-        "  port: number;\n" +
-        "  debug: boolean;\n" +
-        "}\n\n" +
-        "type ProdConfig = Override<BaseConfig, { debug: false; port: 443 }>; // { host: string; debug: false; port: 443 }",
     },
     {
       id: 7,
       question:
         "Write a type guard function `isError` using a custom type predicate that works with this union.",
-      codeSnippet:
-        'interface Success { kind: "success"; data: any; }\n' +
-        'interface Failure { kind: "failure"; error: Error; }\n\n' +
-        "function isError(result: Success | Failure): result is Failure {\n" +
-        '  return result.kind === "failure";\n' +
-        "}\n\n" +
-        "function handle(result: Success | Failure) {\n" +
-        "  if (isError(result)) {\n" +
-        "    console.log(result.error.message); // result: Failure\n" +
-        "  } else {\n" +
-        "    console.log(result.data); // result: Success\n" +
-        "  }\n}",
     },
     {
       id: 8,
@@ -463,35 +370,11 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 9,
       question:
         "Create a discriminated union for a state machine representing a network request. Include an impossible state check.",
-      codeSnippet:
-        "type RequestState<T> =\n" +
-        '  | { state: "idle" }\n' +
-        '  | { state: "pending"; startedAt: number }\n' +
-        '  | { state: "fulfilled"; data: T; completedAt: number }\n' +
-        '  | { state: "rejected"; error: Error; retryCount: number };\n\n' +
-        "function renderUI(req: RequestState<string>) {\n" +
-        "  switch (req.state) {\n" +
-        '    case "idle":\n' +
-        '      return "Ready";\n' +
-        '    case "pending":\n' +
-        "      return `Loading since ${req.startedAt}`;\n" +
-        '    case "fulfilled":\n' +
-        "      return req.data;\n" +
-        '    case "rejected":\n' +
-        "      return `Error: ${req.error.message} (retries: ${req.retryCount})`;\n" +
-        "    default: {\n" +
-        "      const _: never = req; // Compile error if a state is missed\n" +
-        "      return _;\n" +
-        "    }\n" +
-        "  }\n}",
     },
     {
       id: 10,
       question:
         "Write a template literal type `EventName` that generates valid event handler names (on + capitalized event) from a union of events.",
-      codeSnippet:
-        'type Events = "click" | "hover" | "focus";\n' +
-        'type EventName = `on${Capitalize<Events>}`; // Should produce "onClick" | "onHover" | "onFocus"',
     },
   ],
   3: [
@@ -499,71 +382,51 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 1,
       question:
         "Implement a Virtualized List component in React with TypeScript that efficiently renders large datasets by only mounting visible items.",
-      codeSnippet:
-        'type Item = { id: number; text: string };\n\nfunction VirtualizedList<T extends { id: number }>({\n  items,\n  itemHeight,\n  height,\n  render,\n}: {\n  items: T[];\n  itemHeight: number;\n  height: number;\n  render: (item: T) => React.ReactNode;\n}) {\n  const [scrollTop, setScrollTop] = React.useState(0);\n\n  const startIndex = Math.floor(scrollTop / itemHeight);\n  const endIndex = Math.min(\n    items.length,\n    Math.ceil((scrollTop + height) / itemHeight)\n  );\n\n  const visibleItems = items.slice(startIndex, endIndex);\n\n  return (\n    <div\n      style={{ overflowY: "auto", height }}\n      onScroll={(e: React.UIEvent<HTMLDivElement>) =>\n        setScrollTop(e.currentTarget.scrollTop)\n      }\n    >\n      <div style={{ height: items.length * itemHeight, position: "relative" }}>\n        {visibleItems.map((item, idx) => (\n          <div\n            key={item.id}\n            style={{\n              position: "absolute",\n              top: (startIndex + idx) * itemHeight,\n              height: itemHeight,\n            }}\n          >\n            {render(item)}\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}',
     },
     {
       id: 2,
       question:
         "Build a type-safe state machine in TypeScript for a React component ensuring only valid transitions between states.",
-      codeSnippet:
-        'type State = "idle" | "loading" | "success" | "error";\n\ntype Event =\n  | { type: "FETCH" }\n  | { type: "RESOLVE" }\n  | { type: "REJECT" }\n  | { type: "RESET" };\n\nconst transitions: Record<State, Partial<Record<Event["type"], State>>> = {\n  idle: { FETCH: "loading" },\n  loading: { RESOLVE: "success", REJECT: "error" },\n  success: { RESET: "idle" },\n  error: { RESET: "idle" },\n};\n\nfunction reducer(state: State, event: Event): State {\n  return transitions[state][event.type] ?? state;\n}',
     },
     {
       id: 3,
       question:
         "Create a type-safe Event Emitter class in TypeScript supporting strongly typed event payloads.",
-      codeSnippet:
-        "type Events = {\n  message: { text: string };\n  close: void;\n};\n\nclass EventEmitter<E extends Record<string, any>> {\n  private listeners: {\n    [K in keyof E]?: ((payload: E[K]) => void)[];\n  } = {};\n\n  on<K extends keyof E>(event: K, cb: (payload: E[K]) => void) {\n    (this.listeners[event] ||= []).push(cb);\n  }\n\n  emit<K extends keyof E>(event: K, payload: E[K]) {\n    this.listeners[event]?.forEach((cb) => cb(payload));\n  }\n}",
     },
     {
       id: 4,
       question:
         "Build an Infinite Scroll component in React with TypeScript that fetches additional data on reaching the bottom.",
-      codeSnippet:
-        'function InfiniteScroll<T>({\n  fetchMore,\n  render,\n}: {\n  fetchMore: () => Promise<T[]>;\n  render: (item: T) => React.ReactNode;\n}) {\n  const [items, setItems] = React.useState<T[]>([]);\n\n  const handleScroll = async (e: React.UIEvent<HTMLDivElement>) => {\n    const el = e.currentTarget;\n    if (el.scrollTop + el.clientHeight >= el.scrollHeight) {\n      const more = await fetchMore();\n      setItems((prev) => [...prev, ...more]);\n    }\n  };\n\n  return (\n    <div onScroll={handleScroll} style={{ overflowY: "auto", height: 400 }}>\n      {items.map(render)}\n    </div>\n  );\n}',
     },
     {
       id: 5,
       question:
         "Implement a dynamic form builder in React with TypeScript based on a configuration object with validation rules.",
-      codeSnippet:
-        'type Field = {\n  name: string;\n  type: "text" | "number";\n  required?: boolean;\n};\n\nfunction DynamicForm({ fields }: { fields: Field[] }) {\n  const [values, setValues] = React.useState<Record<string, any>>({});\n\n  return (\n    <form>\n      {fields.map((f) => (\n        <input\n          key={f.name}\n          type={f.type}\n          onChange={(e) =>\n            setValues({ ...values, [f.name]: e.target.value })\n          }\n        />\n      ))}\n    </form>\n  );\n}',
     },
     {
       id: 6,
       question:
         "Create a Tree View component in React with TypeScript supporting recursive rendering of nested nodes.",
-      codeSnippet:
-        "type TreeNode = {\n  id: string;\n  name: string;\n  children?: TreeNode[];\n};\n\nfunction Tree({ node }: { node: TreeNode }) {\n  const [open, setOpen] = React.useState(false);\n\n  return (\n    <div>\n      <div onClick={() => setOpen((o) => !o)}>{node.name}</div>\n      {open &&\n        node.children?.map((child) => (\n          <Tree key={child.id} node={child} />\n        ))}\n    </div>\n  );\n}",
     },
     {
       id: 7,
       question:
         "Implement a drag-and-drop list in React with TypeScript allowing reordering of items.",
-      codeSnippet:
-        "type Item = { id: string; text: string };\n\nfunction DragList({ items }: { items: Item[] }) {\n  const [list, setList] = React.useState(items);\n\n  const onDrag = (from: number, to: number) => {\n    const updated = [...list];\n    const [moved] = updated.splice(from, 1);\n    updated.splice(to, 0, moved);\n    setList(updated);\n  };\n\n  return (\n    <div>\n      {list.map((item) => (\n        <div key={item.id} draggable>\n          {item.text}\n        </div>\n      ))}\n    </div>\n  );\n}",
     },
     {
       id: 8,
       question:
         "Set up a fully typed Redux store in TypeScript with actions and reducers for a counter.",
-      codeSnippet:
-        'type State = { count: number };\n\ntype Action = { type: "INC" } | { type: "DEC" };\n\nfunction reducer(state: State = { count: 0 }, action: Action): State {\n  switch (action.type) {\n    case "INC":\n      return { count: state.count + 1 };\n    case "DEC":\n      return { count: state.count - 1 };\n    default:\n      return state;\n  }\n}',
     },
     {
       id: 9,
       question:
         "Build an accessible Modal component in React with TypeScript handling keyboard and focus management.",
-      codeSnippet:
-        'function Modal({\n  isOpen,\n  onClose,\n  children,\n}: {\n  isOpen: boolean;\n  onClose: () => void;\n  children: React.ReactNode;\n}) {\n  React.useEffect(() => {\n    const onKey = (e: KeyboardEvent) => {\n      if (e.key === "Escape") onClose();\n    };\n    window.addEventListener("keydown", onKey);\n    return () => window.removeEventListener("keydown", onKey);\n  }, [onClose]);\n\n  if (!isOpen) return null;\n\n  return <div role="dialog">{children}</div>;\n}',
     },
     {
       id: 10,
       question:
         "Create a typed React Router v6 setup ensuring route params are type-safe.",
-      codeSnippet:
-        "type UserParams = { id: string };\n\nfunction UserPage() {\n  const params = useParams<UserParams>();\n  return <div>User: {params.id}</div>;\n}",
     },
   ],
   4: [

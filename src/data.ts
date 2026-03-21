@@ -27,7 +27,7 @@ export const ROUNDS: Round[] = [
     id: 2,
     title: 'Round 2',
     description: 'Advanced Type Patterns & Scenarios',
-    unlocked: false,
+    unlocked: true,
   },
   {
     id: 3,
