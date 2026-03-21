@@ -5,9 +5,10 @@ interface HeaderProps {
   team: UserRole;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
+  onLogout: () => void;
 }
 
-export function Header({ team, theme, onToggleTheme }: HeaderProps) {
+export function Header({ team, theme, onToggleTheme, onLogout }: HeaderProps) {
   const isAdmin = team === 'Admin';
   const isBlueTeam = team === 'Nishant Ke Favourite';
 
@@ -34,6 +35,12 @@ export function Header({ team, theme, onToggleTheme }: HeaderProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={onLogout}
+            className="text-sm px-3 py-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+          >
+            Logout
+          </button>
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
       </div>
