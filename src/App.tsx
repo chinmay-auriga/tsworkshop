@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useTheme } from './useTheme';
-import { ROUNDS, type UserRole } from './data';
+import { ROUNDS, type UserRole, type TeamName } from './data';
 import { TeamSelection } from './components/TeamSelection';
 import { Header } from './components/Header';
 import { RoundTabs, type ActiveTab } from './components/RoundTabs';
 import { Itinerary } from './components/Itinerary';
 import { RoundContent } from './components/RoundContent';
+import { OtherTeamQuestions } from './components/OtherTeamQuestions';
 
 function App() {
   const { theme, toggleTheme } = useTheme();
@@ -30,6 +31,11 @@ function App() {
     return <TeamSelection onAuthenticate={handleAuthenticateTeam} />;
   }
 
+  const otherTeam: TeamName | null =
+    team === 'Nishant Ke Favourite' ? 'Kapil Ke Khaas'
+    : team === 'Kapil Ke Khaas' ? 'Nishant Ke Favourite'
+    : null;
+
   const currentRound = typeof activeTab === 'number'
     ? unlockedRounds.find((round) => round.id === activeTab) ?? unlockedRounds[0]
     : null;
@@ -47,10 +53,13 @@ function App() {
           rounds={unlockedRounds}
           activeTab={activeTab}
           onSelectTab={setActiveTab}
+          team={team}
         />
         <div className="mt-6">
           {activeTab === 'itinerary' ? (
             <Itinerary />
+          ) : activeTab === 'other-team' && otherTeam ? (
+            <OtherTeamQuestions otherTeam={otherTeam} rounds={unlockedRounds} />
           ) : currentRound ? (
             <RoundContent round={currentRound} team={team} isAdmin={isAdmin} />
           ) : (
