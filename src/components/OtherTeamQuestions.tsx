@@ -1,12 +1,12 @@
-import type { TeamName, RoundQuestion } from '../data';
-import { TEAM_ROUND_QUESTIONS, ROUNDS } from '../data';
+import type { TeamName, RoundQuestion, Round } from '../data';
+import { TEAM_ROUND_QUESTIONS } from '../data';
 
 interface OtherTeamQuestionsProps {
   otherTeam: TeamName;
+  rounds: Round[];
 }
 
-export function OtherTeamQuestions({ otherTeam }: OtherTeamQuestionsProps) {
-  const allRounds = ROUNDS;
+export function OtherTeamQuestions({ otherTeam, rounds }: OtherTeamQuestionsProps) {
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 md:p-10">
@@ -17,7 +17,7 @@ export function OtherTeamQuestions({ otherTeam }: OtherTeamQuestionsProps) {
         </p>
       </div>
 
-      {allRounds.map((round) => {
+      {rounds.map((round) => {
         const questions: RoundQuestion[] = TEAM_ROUND_QUESTIONS[otherTeam][round.id] ?? [];
         if (questions.length === 0) return null;
 

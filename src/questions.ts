@@ -67,6 +67,64 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
         "Create a generic utility type `Nullable<T>` and demonstrate its usage. How does it differ from optional properties?",
     },
   ],
+  2: [
+    {
+      id: 1,
+      question:
+        "Implement a generic function `first` that takes an array of any type and returns the first element, with the correct return type inferred automatically.",
+    },
+    {
+      id: 2,
+      question:
+        "What are the resulting types of `A`, `B`, and `C` in the conditional type below? Explain how conditional types work here.",
+      codeSnippet:
+        'type IsString<T> = T extends string ? "yes" : "no";\n\ntype A = IsString<string>;\ntype B = IsString<number>;\ntype C = IsString<"hello">;',
+    },
+    {
+      id: 3,
+      question:
+        "Implement a recursive type `DeepReadonly<T>` that makes all nested properties readonly, not just the top-level ones.",
+    },
+    {
+      id: 4,
+      question:
+        "What is the type of `Result` below? Explain why conditional types distribute over unions and how that changes the output.",
+      codeSnippet:
+        "type ToArray<T> = T extends any ? T[] : never;\n\ntype Result = ToArray<string | number>;\n\ntype ToArrayNonDist<T> = [T] extends [any] ? T[] : never;\ntype Result2 = ToArrayNonDist<string | number>;",
+    },
+    {
+      id: 5,
+      question:
+        "Create a type `FunctionKeys<T>` that extracts only the keys of `T` whose values are functions.",
+    },
+    {
+      id: 6,
+      question:
+        "Write a generic type `Merge<A, B>` that merges two object types, with `B` overriding overlapping properties from `A`.",
+    },
+    {
+      id: 7,
+      question:
+        "Write a generic type guard function `isNonNull` that removes `null` and `undefined` from any type `T`, and explain how it helps with array filtering.",
+    },
+    {
+      id: 8,
+      question:
+        "What will be the types of `A`, `B`, and `C` below? Explain how the `infer` keyword works in this utility type.",
+      codeSnippet:
+        "type ReturnOf<T> = T extends (...args: any[]) => infer R ? R : never;\n\ntype A = ReturnOf<() => string>;\ntype B = ReturnOf<(x: number) => boolean>;\ntype C = ReturnOf<string>;",
+    },
+    {
+      id: 9,
+      question:
+        "Create a discriminated union for API response states and write a function that handles all cases with exhaustive checking so invalid states are caught at compile time.",
+    },
+    {
+      id: 10,
+      question:
+        "Create a strongly typed event emitter where `emit` enforces the correct payload for each event and `on` automatically infers the correct payload type for each handler. Payload should be required for events that need it and disallowed for `void` events.",
+    },
+  ],
 };
 
 const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
@@ -136,6 +194,75 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 10,
       question:
         "Implement a generic DeepPartial<T> that recursively makes all nested properties optional.",
+    },
+  ],
+  2: [
+    {
+      id: 1,
+      question:
+        "Implement a generic function `last` that takes an array of any type and returns the last element with correct type inference.",
+    },
+    {
+      id: 2,
+      question:
+        "What are types `A`, `B`, and `C`? Explain how conditional types evaluate in the example below.",
+      codeSnippet:
+        'type IsArray<T> = T extends any[] ? "array" : "other";\n\n' +
+        "type A = IsArray<string[]>;\n" +
+        "type B = IsArray<number>;\n" +
+        "type C = IsArray<[string, number]>;",
+    },
+    {
+      id: 3,
+      question:
+        "Implement a `DeepPartial<T>` type that makes ALL nested properties optional recursively.",
+    },
+    {
+      id: 4,
+      question:
+        "Explain why this produces different results and what 'naked' vs 'clothed' type parameters mean.",
+      codeSnippet:
+        "type Dist<T> = T extends string ? T[] : never;\n" +
+        "type NoDist<T> = [T] extends [string] ? T[] : never;\n\n" +
+        'type A = Dist<"a" | "b" | 1>;\n' +
+        'type B = NoDist<"a" | "b" | 1>;',
+    },
+    {
+      id: 5,
+      question:
+        "Create a type `ReadonlyKeys<T>` that extracts only the keys of `T` that are readonly.",
+    },
+    {
+      id: 6,
+      question:
+        "Write a type `Override<T, U>` that takes type `T` and overrides only the matching keys with types from `U`, keeping the rest unchanged.",
+    },
+    {
+      id: 7,
+      question:
+        "Write a type guard function `isError` using a custom type predicate that works with this union.",
+    },
+    {
+      id: 8,
+      question:
+        "What types do `A`, `B`, and `C` resolve to? Explain how `infer` pattern matches in different positions.",
+      codeSnippet:
+        "type First<T> = T extends [infer F, ...any[]] ? F : never;\n" +
+        "type Last<T> = T extends [...any[], infer L] ? L : never;\n" +
+        "type Middle<T> = T extends [any, ...infer M, any] ? M : never;\n\n" +
+        "type A = First<[1, 2, 3]>;\n" +
+        "type B = Last<[1, 2, 3]>;\n" +
+        "type C = Middle<[1, 2, 3]>;",
+    },
+    {
+      id: 9,
+      question:
+        "Create a discriminated union for a state machine representing a network request. Include an impossible state check.",
+    },
+    {
+      id: 10,
+      question:
+        "Write a template literal type `EventName` that generates valid event handler names (on + capitalized event) from a union of events.",
     },
   ],
 };

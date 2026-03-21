@@ -65,7 +65,7 @@ function App() {
           ) : activeTab === 'itinerary' ? (
             <Itinerary />
           ) : activeTab === 'other-team' && otherTeam ? (
-            <OtherTeamQuestions otherTeam={otherTeam} />
+            <OtherTeamQuestions otherTeam={otherTeam} rounds={unlockedRounds} />
           ) : currentRound ? (
             <RoundContent round={currentRound} team={team} isAdmin={isAdmin} />
           ) : (
