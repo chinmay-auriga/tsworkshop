@@ -60,7 +60,23 @@ function App() {
           </div>
         </header>
         <main className="max-w-5xl mx-auto px-4 py-8">
-          <Leaderboard />
+          <LiveStatus />
+          <div className="flex flex-wrap gap-2 mb-6">
+            {(['itinerary', 'leaderboard'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                  activeTab === tab
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md shadow-blue-500/20'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 cursor-pointer'
+                }`}
+              >
+                {tab === 'itinerary' ? 'Itinerary' : '★ Leaderboard'}
+              </button>
+            ))}
+          </div>
+          {activeTab === 'itinerary' ? <Itinerary /> : <Leaderboard />}
         </main>
       </div>
     );
