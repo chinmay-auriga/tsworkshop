@@ -72,8 +72,6 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 1,
       question:
         "Implement a generic function `first` that takes an array of any type and returns the first element, with the correct return type inferred automatically.",
-      codeSnippet:
-        "function first<T>(arr: T[]): T | undefined {\n  return arr[0];\n}",
     },
     {
       id: 2,
@@ -86,8 +84,6 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 3,
       question:
         "Implement a recursive type `DeepReadonly<T>` that makes all nested properties readonly, not just the top-level ones.",
-      codeSnippet:
-        "interface AppState {\n  user: {\n    name: string;\n    settings: {\n      theme: string;\n      notifications: boolean;\n    };\n  };\n  items: string[];\n}\n\ntype DeepReadonly<T> = {\n  readonly [K in keyof T]: T[K] extends object\n    ? DeepReadonly<T[K]>\n    : T[K];\n};",
     },
     {
       id: 4,
@@ -100,22 +96,16 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 5,
       question:
         "Create a type `FunctionKeys<T>` that extracts only the keys of `T` whose values are functions.",
-      codeSnippet:
-        "interface API {\n  baseUrl: string;\n  timeout: number;\n  fetchUser: (id: number) => Promise<User>;\n  fetchPosts: () => Promise<Post[]>;\n  retryCount: number;\n}\n\ntype FunctionKeys<T> = {\n  [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never;\n}[keyof T];",
     },
     {
       id: 6,
       question:
         "Write a generic type `Merge<A, B>` that merges two object types, with `B` overriding overlapping properties from `A`.",
-      codeSnippet:
-        'type Merge<A, B> = Omit<A, keyof B> & B;\n\ninterface Defaults {\n  color: string;\n  size: number;\n  visible: boolean;\n}\n\ninterface Overrides {\n  color: "red" | "blue";\n  opacity: number;\n}\n\ntype Final = Merge<Defaults, Overrides>;',
     },
     {
       id: 7,
       question:
         "Write a generic type guard function `isNonNull` that removes `null` and `undefined` from any type `T`, and explain how it helps with array filtering.",
-      codeSnippet:
-        'function isNonNull<T>(val: T): val is NonNullable<T> {\n  return val !== null && val !== undefined;\n}\n\nconst items: (string | null | undefined)[] = ["a", null, "b", undefined];\nconst filtered = items.filter(isNonNull);',
     },
     {
       id: 8,
@@ -128,15 +118,11 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 9,
       question:
         "Create a discriminated union for API response states and write a function that handles all cases with exhaustive checking so invalid states are caught at compile time.",
-      codeSnippet:
-        'type ApiResponse<T> =\n  | { status: "loading" }\n  | { status: "success"; data: T }\n  | { status: "error"; error: string };\n\nfunction handleResponse(res: ApiResponse<User>): string {\n  switch (res.status) {\n    case "loading":\n      return "Loading...";\n    case "success":\n      return res.data.name;\n    case "error":\n      return res.error;\n    default: {\n      const _exhaustive: never = res;\n      return _exhaustive;\n    }\n  }\n}',
     },
     {
       id: 10,
       question:
         "Create a strongly typed event emitter where `emit` enforces the correct payload for each event and `on` automatically infers the correct payload type for each handler. Payload should be required for events that need it and disallowed for `void` events.",
-      codeSnippet:
-        "type Events = {\n  login: { userId: number };\n  logout: void;\n  error: { message: string; code: number };\n};\n\ndeclare function createEmitter<E>(): {\n  emit<K extends keyof E>(\n    event: K,\n    ...args: E[K] extends void ? [] : [payload: E[K]]\n  ): void;\n  on<K extends keyof E>(\n    event: K,\n    handler: E[K] extends void ? () => void : (payload: E[K]) => void\n  ): void;\n};\n\nconst emitter = createEmitter<Events>();",
     },
   ],
 };
@@ -215,8 +201,6 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 1,
       question:
         "Implement a generic function `last` that takes an array of any type and returns the last element with correct type inference.",
-      codeSnippet:
-        "function last<T>(arr: T[]): T | undefined {\n  return arr[arr.length - 1];\n}",
     },
     {
       id: 2,
@@ -232,22 +216,6 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 3,
       question:
         "Implement a `DeepPartial<T>` type that makes ALL nested properties optional recursively.",
-      codeSnippet:
-        "interface FormData {\n" +
-        "  user: {\n" +
-        "    name: string;\n" +
-        "    address: {\n" +
-        "      city: string;\n" +
-        "      zip: number;\n" +
-        "    };\n" +
-        "  };\n" +
-        "  agreed: boolean;\n" +
-        "}\n\n" +
-        "type DeepPartial<T> = {\n" +
-        "  [K in keyof T]?: T[K] extends object\n" +
-        "    ? DeepPartial<T[K]>\n" +
-        "    : T[K];\n" +
-        "};",
     },
     {
       id: 4,
@@ -263,49 +231,16 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 5,
       question:
         "Create a type `ReadonlyKeys<T>` that extracts only the keys of `T` that are readonly.",
-      codeSnippet:
-        "interface Mixed {\n" +
-        "  readonly id: number;\n" +
-        "  name: string;\n" +
-        "  readonly createdAt: Date;\n" +
-        "  updatedAt: Date;\n" +
-        "}\n\n" +
-        "type ReadonlyKeys<T> = {\n" +
-        "  [K in keyof T]-?: (<V>() => V extends { [P in K]: T[K] } ? 1 : 2) extends\n" +
-        "    (<V>() => V extends { -readonly [P in K]: T[K] } ? 1 : 2)\n" +
-        "    ? never\n" +
-        "    : K;\n" +
-        "}[keyof T];",
     },
     {
       id: 6,
       question:
         "Write a type `Override<T, U>` that takes type `T` and overrides only the matching keys with types from `U`, keeping the rest unchanged.",
-      codeSnippet:
-        "type Override<T, U extends Partial<Record<keyof T, any>>> = Omit<T, keyof U> & U;\n\n" +
-        "interface BaseConfig {\n" +
-        "  host: string;\n" +
-        "  port: number;\n" +
-        "  debug: boolean;\n" +
-        "}\n\n" +
-        "type ProdConfig = Override<BaseConfig, { debug: false; port: 443 }>; // { host: string; debug: false; port: 443 }",
     },
     {
       id: 7,
       question:
         "Write a type guard function `isError` using a custom type predicate that works with this union.",
-      codeSnippet:
-        'interface Success { kind: "success"; data: any; }\n' +
-        'interface Failure { kind: "failure"; error: Error; }\n\n' +
-        "function isError(result: Success | Failure): result is Failure {\n" +
-        '  return result.kind === "failure";\n' +
-        "}\n\n" +
-        "function handle(result: Success | Failure) {\n" +
-        "  if (isError(result)) {\n" +
-        "    console.log(result.error.message); // result: Failure\n" +
-        "  } else {\n" +
-        "    console.log(result.data); // result: Success\n" +
-        "  }\n}",
     },
     {
       id: 8,
@@ -323,35 +258,11 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 9,
       question:
         "Create a discriminated union for a state machine representing a network request. Include an impossible state check.",
-      codeSnippet:
-        "type RequestState<T> =\n" +
-        '  | { state: "idle" }\n' +
-        '  | { state: "pending"; startedAt: number }\n' +
-        '  | { state: "fulfilled"; data: T; completedAt: number }\n' +
-        '  | { state: "rejected"; error: Error; retryCount: number };\n\n' +
-        "function renderUI(req: RequestState<string>) {\n" +
-        "  switch (req.state) {\n" +
-        '    case "idle":\n' +
-        '      return "Ready";\n' +
-        '    case "pending":\n' +
-        "      return `Loading since ${req.startedAt}`;\n" +
-        '    case "fulfilled":\n' +
-        "      return req.data;\n" +
-        '    case "rejected":\n' +
-        "      return `Error: ${req.error.message} (retries: ${req.retryCount})`;\n" +
-        "    default: {\n" +
-        "      const _: never = req; // Compile error if a state is missed\n" +
-        "      return _;\n" +
-        "    }\n" +
-        "  }\n}",
     },
     {
       id: 10,
       question:
         "Write a template literal type `EventName` that generates valid event handler names (on + capitalized event) from a union of events.",
-      codeSnippet:
-        'type Events = "click" | "hover" | "focus";\n' +
-        'type EventName = `on${Capitalize<Events>}`; // Should produce "onClick" | "onHover" | "onFocus"',
     },
   ],
 };
