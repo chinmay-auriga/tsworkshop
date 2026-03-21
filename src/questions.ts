@@ -20,8 +20,6 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 3,
       question:
         "Explain the difference between `never` and `void`. Provide examples of when each should be used.",
-      codeSnippet:
-        "function logMessage(msg: string): void {\n  console.log(msg);\n}\n\nfunction throwError(msg: string): never {\n  throw new Error(msg);\n}",
     },
     {
       id: 4,
@@ -34,8 +32,6 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 5,
       question:
         "Write a function `getLength` that accepts either a string or an array and returns its length. How does TypeScript allow safe access without narrowing?",
-      codeSnippet:
-        "function getLength(input: string | any[]): number {\n  return input.length;\n}",
     },
     {
       id: 6,
@@ -69,8 +65,6 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 10,
       question:
         "Create a generic utility type `Nullable<T>` and demonstrate its usage. How does it differ from optional properties?",
-      codeSnippet:
-        'type Nullable<T> = T | null | undefined;\n\nlet username: Nullable<string>;\nusername = "Neha";\nusername = null;\nusername = undefined;\n// username = 42;',
     },
   ],
 };
@@ -137,15 +131,11 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 9,
       question:
         "Implement a generic DeepReadonly<T> that recursively makes all nested properties readonly.",
-      codeSnippet:
-        "type DeepReadonly<T> = {\n  readonly [K in keyof T]: T[K] extends object\n    ? DeepReadonly<T[K]>\n    : T[K];\n};",
     },
     {
       id: 10,
       question:
         "Implement a generic DeepPartial<T> that recursively makes all nested properties optional.",
-      codeSnippet:
-        "type DeepPartial<T> = {\n  [K in keyof T]?: T[K] extends object\n    ? DeepPartial<T[K]>\n    : T[K];\n};",
     },
   ],
 };

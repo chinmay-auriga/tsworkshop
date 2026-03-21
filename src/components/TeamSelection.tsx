@@ -8,15 +8,15 @@ interface TeamSelectionProps {
 const TEAM_CREDENTIALS: Record<string, { role: UserRole; password: string }> = {
   'nishant ke favourite': {
     role: 'Nishant Ke Favourite',
-    password: 'nkf-2026',
+    password: import.meta.env.VITE_PASSWORD_NISHANT,
   },
   'kapil ke khaas': {
     role: 'Kapil Ke Khaas',
-    password: 'kkk-2026',
+    password: import.meta.env.VITE_PASSWORD_KAPIL,
   },
   admin: {
     role: 'Admin',
-    password: 'admin',
+    password: import.meta.env.VITE_PASSWORD_ADMIN,
   },
 };
 
