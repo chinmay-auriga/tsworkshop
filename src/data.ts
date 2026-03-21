@@ -33,7 +33,7 @@ export const ROUNDS: Round[] = [
     id: 3,
     title: 'Round 3',
     description: 'React + TypeScript Coding Challenge',
-    unlocked: false,
+    unlocked: true,
   },
   {
     id: 4,
