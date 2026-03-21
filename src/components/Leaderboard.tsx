@@ -49,8 +49,72 @@ function Crown() {
   );
 }
 
-function Confetti() {
-  const pieces = Array.from({ length: 24 }, (_, i) => {
+function Fireworks() {
+  const bursts = [
+    { x: '15%', y: '20%', delay: 0, size: 80, color: '#facc15' },
+    { x: '80%', y: '15%', delay: 0.6, size: 70, color: '#f97316' },
+    { x: '50%', y: '10%', delay: 1.2, size: 90, color: '#3b82f6' },
+    { x: '25%', y: '70%', delay: 0.3, size: 60, color: '#8b5cf6' },
+    { x: '75%', y: '75%', delay: 0.9, size: 75, color: '#ef4444' },
+    { x: '10%', y: '50%', delay: 1.5, size: 65, color: '#10b981' },
+    { x: '90%', y: '45%', delay: 0.4, size: 70, color: '#facc15' },
+  ];
+
+  const particles = [
+    { angle: 0 }, { angle: 45 }, { angle: 90 }, { angle: 135 },
+    { angle: 180 }, { angle: 225 }, { angle: 270 }, { angle: 315 },
+    { angle: 22.5 }, { angle: 67.5 }, { angle: 112.5 }, { angle: 157.5 },
+  ];
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+      {bursts.map((burst, bi) => (
+        <div
+          key={bi}
+          className="absolute"
+          style={{ left: burst.x, top: burst.y }}
+        >
+          {/* Expanding ring */}
+          <div
+            className="absolute rounded-full border-2"
+            style={{
+              width: burst.size,
+              height: burst.size,
+              marginLeft: -burst.size / 2,
+              marginTop: -burst.size / 2,
+              borderColor: burst.color,
+              animation: `firework-ring 1.8s ease-out ${burst.delay}s infinite`,
+            }}
+          />
+          {/* Particles shooting outward */}
+          {particles.map((p, pi) => {
+            const rad = (p.angle * Math.PI) / 180;
+            const dist = burst.size * 0.6;
+            const tx = Math.cos(rad) * dist;
+            const ty = Math.sin(rad) * dist;
+            return (
+              <div
+                key={pi}
+                className="absolute w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor: burst.color,
+                  left: -3,
+                  top: -3,
+                  animation: `firework-particle 1.4s ease-out ${burst.delay + 0.1}s infinite`,
+                  transform: `translate(${tx}px, ${ty}px)`,
+                  animationFillMode: 'both',
+                }}
+              />
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function Confetti({ count = 24 }: { count?: number }) {
+  const pieces = Array.from({ length: count }, (_, i) => {
     const left = Math.random() * 100;
     const delay = Math.random() * 2;
     const duration = 2 + Math.random() * 2;
@@ -158,10 +222,10 @@ export function Leaderboard() {
       {/* Title */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-extrabold bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 bg-clip-text text-transparent">
-          Leaderboard
+          🏆 Final Leaderboard 🏆
         </h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          Live standings across all rounds
+          Final standings across all rounds
         </p>
       </div>
 
@@ -173,10 +237,12 @@ export function Leaderboard() {
           <Crown />
         </div>
         <div
-          className={`rounded-2xl border-2 ${teamColor(leader.team).border} bg-gradient-to-br from-yellow-50 via-white to-yellow-50 dark:from-yellow-900/10 dark:via-gray-800 dark:to-yellow-900/10 p-6 pt-8 text-center shadow-xl shadow-yellow-500/10`}
+          className={`rounded-2xl border-2 ${teamColor(leader.team).border} bg-gradient-to-br from-yellow-50 via-white to-yellow-50 dark:from-yellow-900/10 dark:via-gray-800 dark:to-yellow-900/10 p-6 pt-8 text-center shadow-xl shadow-yellow-500/10 animate-firework-glow`}
         >
+          {/* Firework blasts */}
+          <Fireworks />
           <p className="text-xs uppercase tracking-widest text-yellow-600 dark:text-yellow-400 font-bold mb-1">
-            Currently Leading
+            🎉 Winner 🎉
           </p>
           <p
             className={`text-xl font-extrabold ${teamColor(leader.team).text}`}
@@ -219,7 +285,7 @@ export function Leaderboard() {
           return (
             <div
               key={entry.team}
-              className={`rounded-2xl border p-5 transition-all duration-700 ${
+              className={`relative rounded-2xl border p-5 transition-all duration-700 overflow-hidden ${
                 show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               } ${
                 isLeader
@@ -228,6 +294,7 @@ export function Leaderboard() {
               }`}
               style={{ transitionDelay: `${400 + i * 200}ms` }}
             >
+              {/* Huge confetti on winning card */}
               {/* Team name row */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -275,7 +342,7 @@ export function Leaderboard() {
               <p
                 className={`mt-3 text-xs font-medium ${isLeader ? "text-green-600 dark:text-green-400" : "text-gray-400 dark:text-gray-500"}`}
               >
-                {isLeader ? "🔥 On fire! Keep it up!" : "💪 Time to catch up!"}
+                {isLeader ? "🏆 Champion! Congratulations!" : "Better luck next time! 💪"}
               </p>
             </div>
           );
