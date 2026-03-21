@@ -75,8 +75,29 @@ function App() {
                 {tab === 'itinerary' ? 'Itinerary' : '★ Leaderboard'}
               </button>
             ))}
+            {unlockedRounds.map((round) => (
+              <button
+                key={round.id}
+                onClick={() => setActiveTab(round.id)}
+                className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                  activeTab === round.id
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md shadow-blue-500/20'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 cursor-pointer'
+                }`}
+              >
+                {round.title}
+              </button>
+            ))}
           </div>
-          {activeTab === 'itinerary' ? <Itinerary /> : <Leaderboard />}
+          <div className="mt-6">
+            {activeTab === 'itinerary' ? (
+              <Itinerary />
+            ) : activeTab === 'leaderboard' ? (
+              <Leaderboard />
+            ) : currentRound ? (
+              <RoundContent round={currentRound} team="Admin" isAdmin />
+            ) : null}
+          </div>
         </main>
       </div>
     );
