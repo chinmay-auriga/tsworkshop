@@ -126,53 +126,53 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
     },
   ],
   3: [
+    // {
+    //   id: 1,
+    //   question:
+    //     "Build a fully typed Search Filter React component that filters users by name (case insensitive) without using `any`.",
+    // },
+    // {
+    //   id: 2,
+    //   question:
+    //     "Implement a strongly typed `useDynamicForm` hook where schema drives inferred value types and setter enforces correct types.",
+    // },
     {
       id: 1,
-      question:
-        "Build a fully typed Search Filter React component that filters users by name (case insensitive) without using `any`.",
-    },
-    {
-      id: 2,
-      question:
-        "Implement a strongly typed `useDynamicForm` hook where schema drives inferred value types and setter enforces correct types.",
-    },
-    {
-      id: 3,
       question:
         "Build a typed multi-step form state machine using discriminated unions without `any`, `as`, or non-null assertions.",
     },
     {
-      id: 4,
+      id: 2,
       question:
         "Implement a generic `useStepState<T>` hook that manages form data and validation errors for each step.",
     },
     {
-      id: 5,
+      id: 3,
       question:
         "Write a generic validation function that maps errors to the exact keys of the input type without using `any`.",
     },
     {
-      id: 6,
+      id: 4,
       question:
         "Create a typed StepIndicator component using mapped types based on FormStep['step'].",
     },
     {
-      id: 7,
+      id: 5,
       question:
         "Create a reusable TextBox component that only accepts text-like input types and supports all native handlers.",
     },
     {
-      id: 8,
+      id: 6,
       question:
         "Ensure onChange is strictly typed and propagates correct value types in a controlled input component.",
     },
     {
-      id: 9,
+      id: 7,
       question:
         "Compose final submission data from multiple steps ensuring full type safety without casting.",
     },
     {
-      id: 10,
+      id: 8,
       question:
         "Handle step transitions with type-safe guards ensuring invalid transitions are impossible.",
       codeSnippet:
@@ -320,53 +320,53 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
     },
   ],
   3: [
+    // {
+    //   id: 1,
+    //   question:
+    //     "Implement a Virtualized List component in React with TypeScript that efficiently renders large datasets by only mounting visible items.",
+    // },
+    // {
+    //   id: 2,
+    //   question:
+    //     "Build a type-safe state machine in TypeScript for a React component ensuring only valid transitions between states.",
+    // },
     {
       id: 1,
-      question:
-        "Implement a Virtualized List component in React with TypeScript that efficiently renders large datasets by only mounting visible items.",
-    },
-    {
-      id: 2,
-      question:
-        "Build a type-safe state machine in TypeScript for a React component ensuring only valid transitions between states.",
-    },
-    {
-      id: 3,
       question:
         "Create a type-safe Event Emitter class in TypeScript supporting strongly typed event payloads.",
     },
     {
-      id: 4,
+      id: 2,
       question:
         "Build an Infinite Scroll component in React with TypeScript that fetches additional data on reaching the bottom.",
     },
     {
-      id: 5,
+      id: 3,
       question:
         "Implement a dynamic form builder in React with TypeScript based on a configuration object with validation rules.",
     },
     {
-      id: 6,
+      id: 4,
       question:
         "Create a Tree View component in React with TypeScript supporting recursive rendering of nested nodes.",
     },
     {
-      id: 7,
+      id: 5,
       question:
         "Implement a drag-and-drop list in React with TypeScript allowing reordering of items.",
     },
     {
-      id: 8,
+      id: 6,
       question:
         "Set up a fully typed Redux store in TypeScript with actions and reducers for a counter.",
     },
     {
-      id: 9,
+      id: 7,
       question:
         "Build an accessible Modal component in React with TypeScript handling keyboard and focus management.",
     },
     {
-      id: 10,
+      id: 8,
       question:
         "Create a typed React Router v6 setup ensuring route params are type-safe.",
     },
