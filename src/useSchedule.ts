@@ -7,8 +7,7 @@ export const SCHEDULE = [
   { time: '2:20 PM – 3:30 PM', label: 'Lunch Break', description: '', type: 'break' as const },
   { time: '3:30 PM – 6:00 PM', label: 'Round 3', description: 'React + TypeScript Coding Challenge', type: 'round' as const },
   { time: '6:00 PM – 6:10 PM', label: 'Break', description: '', type: 'break' as const },
-  { time: '6:10 PM – 7:00 PM', label: 'Round 4', description: 'TypeScript Configuration Mastery', type: 'round' as const },
-  { time: '7:00 PM – 10:00 PM', label: 'Round 5', description: 'Full Integration Challenge(Take Home Assignments)', type: 'round' as const },
+  { time: '6:10 PM – 6:30 PM', label: 'Round 4', description: 'TypeScript Configuration Mastery', type: 'round' as const },
 ];
 
 export function parseTime(timeStr: string): number {
@@ -61,5 +60,8 @@ export function useScheduleClock() {
 
   const activeItem = activeIndex !== -1 ? SCHEDULE[activeIndex] : null;
 
-  return { now, currentMinutes, activeIndex, activeItem, remainingLabel };
+  const lastEnd = getScheduleRange(SCHEDULE[SCHEDULE.length - 1].time)[1];
+  const eventEnded = currentMinutes >= lastEnd;
+
+  return { now, currentMinutes, activeIndex, activeItem, remainingLabel, eventEnded };
 }

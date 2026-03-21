@@ -1,7 +1,7 @@
 import { formatClock, useScheduleClock } from '../useSchedule';
 
 export function LiveStatus() {
-  const { now, activeItem, remainingLabel } = useScheduleClock();
+  const { now, activeItem, remainingLabel, eventEnded } = useScheduleClock();
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 py-2.5 mb-4">
@@ -20,6 +20,8 @@ export function LiveStatus() {
             </span>
           )}
         </div>
+      ) : eventEnded ? (
+        <span className="text-sm font-semibold text-red-500 dark:text-red-400">🎉 Event Ended</span>
       ) : (
         <span className="text-sm text-gray-400 dark:text-gray-500">No active session</span>
       )}
