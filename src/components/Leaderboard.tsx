@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 interface TeamScore {
   team: string;
   rounds: { round: number; score: number }[];
-  total: number;
 }
 
 const SCORES: TeamScore[] = [
@@ -13,7 +12,6 @@ const SCORES: TeamScore[] = [
       { round: 1, score: 10 },
       { round: 2, score: 0 },
     ],
-    total: 10,
   },
   {
     team: "Kapil Ke Khaas",
@@ -21,9 +19,12 @@ const SCORES: TeamScore[] = [
       { round: 1, score: 0 },
       { round: 2, score: 20 },
     ],
-    total: 20,
   },
 ];
+
+function getTotal(entry: TeamScore) {
+  return entry.rounds.reduce((sum, r) => sum + r.score, 0);
+}
 
 function Crown() {
   return (
@@ -122,9 +123,13 @@ export function Leaderboard() {
     requestAnimationFrame(() => setShow(true));
   }, []);
 
-  const sorted = [...SCORES].sort((a, b) => b.total - a.total);
+  const sorted = [...SCORES].sort((a, b) => getTotal(b) - getTotal(a));
   const leader = sorted[0];
-  const maxScore = Math.max(...sorted.map((s) => s.total), 1);
+  const leaderTotal = getTotal(leader);
+  const maxScore = Math.max(...sorted.map((s) => getTotal(s)), 1);
+
+  // Collect all unique round numbers
+  const allRounds = [...new Set(SCORES.flatMap((s) => s.rounds.map((r) => r.round)))].sort((a, b) => a - b);
 
   const teamColor = (name: string) =>
     name === "Nishant Ke Favourite"
@@ -177,7 +182,7 @@ export function Leaderboard() {
             {leader.team}
           </p>
           <p className="text-4xl font-black mt-2 bg-gradient-to-r from-yellow-500 to-amber-600 bg-clip-text text-transparent">
-            {leader.total}
+            {leaderTotal}
             <span className="text-base font-semibold ml-1 text-gray-400">
               pts
             </span>
@@ -206,7 +211,8 @@ export function Leaderboard() {
         {sorted.map((entry, i) => {
           const colors = teamColor(entry.team);
           const isLeader = i === 0;
-          const isBehind = !isLeader && entry.total < leader.total;
+          const isBehind = !isLeader && getTotal(entry) < leaderTotal;
+          const entryTotal = getTotal(entry);
 
           return (
             <div
@@ -240,13 +246,13 @@ export function Leaderboard() {
                 <span
                   className={`text-2xl font-black ${isLeader ? colors.text : "text-gray-600 dark:text-gray-300"}`}
                 >
-                  {entry.total}
+                  {entryTotal}
                 </span>
               </div>
 
               {/* Score bar */}
               <ScoreBar
-                score={entry.total}
+                score={entryTotal}
                 maxScore={maxScore}
                 color={colors.bg}
               />
@@ -297,26 +303,33 @@ export function Leaderboard() {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-t border-gray-100 dark:border-gray-700/50">
-                <td className="px-4 py-2.5 font-medium text-gray-700 dark:text-gray-300">
-                  Round 1
-                </td>
-                <td className="px-4 py-2.5 text-center font-bold text-blue-600 dark:text-blue-400">
-                  10 🏆
-                </td>
-                <td className="px-4 py-2.5 text-center font-bold text-orange-600 dark:text-orange-400">
-                  0
-                </td>
-              </tr>
+              {allRounds.map((roundNum) => {
+                const nkfScore = SCORES.find((s) => s.team === 'Nishant Ke Favourite')?.rounds.find((r) => r.round === roundNum)?.score ?? 0;
+                const kkScore = SCORES.find((s) => s.team === 'Kapil Ke Khaas')?.rounds.find((r) => r.round === roundNum)?.score ?? 0;
+                const roundWinner = nkfScore > kkScore ? 'nkf' : kkScore > nkfScore ? 'kk' : null;
+                return (
+                  <tr key={roundNum} className="border-t border-gray-100 dark:border-gray-700/50">
+                    <td className="px-4 py-2.5 font-medium text-gray-700 dark:text-gray-300">
+                      Round {roundNum}
+                    </td>
+                    <td className="px-4 py-2.5 text-center font-bold text-blue-600 dark:text-blue-400">
+                      {nkfScore}{roundWinner === 'nkf' ? ' 🏆' : ''}
+                    </td>
+                    <td className="px-4 py-2.5 text-center font-bold text-orange-600 dark:text-orange-400">
+                      {kkScore}{roundWinner === 'kk' ? ' 🏆' : ''}
+                    </td>
+                  </tr>
+                );
+              })}
               <tr className="border-t border-gray-100 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-800/30">
                 <td className="px-4 py-2.5 font-bold text-gray-800 dark:text-gray-200">
                   Total
                 </td>
                 <td className="px-4 py-2.5 text-center font-extrabold text-blue-700 dark:text-blue-300">
-                  10
+                  {getTotal(SCORES.find((s) => s.team === 'Nishant Ke Favourite')!)}
                 </td>
                 <td className="px-4 py-2.5 text-center font-extrabold text-orange-700 dark:text-orange-300">
-                  0
+                  {getTotal(SCORES.find((s) => s.team === 'Kapil Ke Khaas')!)}
                 </td>
               </tr>
             </tbody>
