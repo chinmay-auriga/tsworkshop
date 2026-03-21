@@ -130,64 +130,46 @@ const NISHANT_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 1,
       question:
         "Build a fully typed Search Filter React component that filters users by name (case insensitive) without using `any`.",
-      codeSnippet:
-        'type User = { id: number; name: string };\n\nfunction SearchFilter<T extends { id: number; name: string }>({\n  users,\n}: {\n  users: T[];\n}) {\n  const [query, setQuery] = React.useState("");\n\n  const filtered = React.useMemo(() => {\n    return users.filter((u) =>\n      u.name.toLowerCase().includes(query.toLowerCase())\n    );\n  }, [users, query]);\n\n  return (\n    <div>\n      <input\n        value={query}\n        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>\n          setQuery(e.target.value)\n        }\n      />\n      {filtered.map((u) => (\n        <div key={u.id}>{u.name}</div>\n      ))}\n    </div>\n  );\n}',
     },
     {
       id: 2,
       question:
         "Implement a strongly typed `useDynamicForm` hook where schema drives inferred value types and setter enforces correct types.",
-      codeSnippet:
-        "type FieldMap = {\n  text: string;\n  number: number;\n  checkbox: boolean;\n};\n\ntype Schema = Record<string, { type: keyof FieldMap; default: unknown }>;\n\ntype InferValues<T extends Schema> = {\n  [K in keyof T]: FieldMap[T[K]['type']];\n};\n\nfunction useDynamicForm<T extends Schema>(schema: T) {\n  const initialValues = Object.keys(schema).reduce((acc, key) => {\n    const k = key as keyof T;\n    acc[k] = schema[k].default as InferValues<T>[typeof k];\n    return acc;\n  }, {} as InferValues<T>);\n\n  const [values, setValues] = React.useState(initialValues);\n\n  function setValue<K extends keyof T>(key: K, value: InferValues<T>[K]) {\n    setValues((prev) => ({ ...prev, [key]: value }));\n  }\n\n  function reset() {\n    setValues(initialValues);\n  }\n\n  return { values, setValue, reset };\n}",
     },
     {
       id: 3,
       question:
         "Build a typed multi-step form state machine using discriminated unions without `any`, `as`, or non-null assertions.",
-      codeSnippet:
-        "type Step1Data = { name: string; age: number; email: string };\ntype Step2Data = { role: 'frontend' | 'backend' | 'fullstack'; experience: 'junior' | 'mid' | 'senior'; newsletter: boolean };\n\ntype FormStep =\n  | { step: 1; data: Step1Data }\n  | { step: 2; data: Step2Data }\n  | { step: 3; data: Step1Data & Step2Data };",
     },
     {
       id: 4,
       question:
         "Implement a generic `useStepState<T>` hook that manages form data and validation errors for each step.",
-      codeSnippet:
-        "function useStepState<T>(initial: T) {\n  const [data, setData] = React.useState<T>(initial);\n  const [errors, setErrors] = React.useState<Record<keyof T, string | undefined>>({} as Record<keyof T, string | undefined>);\n\n  function update<K extends keyof T>(key: K, value: T[K]) {\n    setData((prev) => ({ ...prev, [key]: value }));\n  }\n\n  return { data, errors, setErrors, update };\n}",
     },
     {
       id: 5,
       question:
         "Write a generic validation function that maps errors to the exact keys of the input type without using `any`.",
-      codeSnippet:
-        "function validate<T extends Record<string, unknown>>(data: T): Record<keyof T, string | undefined> {\n  const result = {} as Record<keyof T, string | undefined>;\n\n  for (const key in data) {\n    if (!data[key]) {\n      result[key] = 'Required';\n    }\n  }\n\n  return result;\n}",
     },
     {
       id: 6,
       question:
         "Create a typed StepIndicator component using mapped types based on FormStep['step'].",
-      codeSnippet:
-        "type Steps = 1 | 2 | 3;\n\nconst stepLabels: Record<Steps, string> = {\n  1: 'Personal',\n  2: 'Preferences',\n  3: 'Review',\n};\n\nfunction StepIndicator({ current }: { current: Steps }) {\n  return (\n    <div>\n      {(Object.keys(stepLabels) as unknown as Steps[]).map((step) => (\n        <span key={step}>\n          {stepLabels[step]} {step === current ? '(active)' : ''}\n        </span>\n      ))}\n    </div>\n  );\n}",
     },
     {
       id: 7,
       question:
         "Create a reusable TextBox component that only accepts text-like input types and supports all native handlers.",
-      codeSnippet:
-        "type InputType = 'text' | 'email' | 'search';\n\ntype TextBoxProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> & {\n  type?: InputType;\n};\n\nconst TextBox = React.forwardRef<HTMLInputElement, TextBoxProps>(\n  ({ type = 'text', ...rest }, ref) => {\n    return <input ref={ref} type={type} {...rest} />;\n  }\n);",
     },
     {
       id: 8,
       question:
         "Ensure onChange is strictly typed and propagates correct value types in a controlled input component.",
-      codeSnippet:
-        "type Props = {\n  value: string;\n  onChange: (value: string) => void;\n};\n\nfunction Input({ value, onChange }: Props) {\n  return (\n    <input\n      value={value}\n      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>\n        onChange(e.target.value)\n      }\n    />\n  );\n}",
     },
     {
       id: 9,
       question:
         "Compose final submission data from multiple steps ensuring full type safety without casting.",
-      codeSnippet:
-        "function combine<A, B>(a: A, b: B): A & B {\n  return { ...a, ...b };\n}",
     },
     {
       id: 10,
@@ -342,71 +324,51 @@ const KAPIL_TEAM_QUESTIONS: Record<number, RoundQuestion[]> = {
       id: 1,
       question:
         "Implement a Virtualized List component in React with TypeScript that efficiently renders large datasets by only mounting visible items.",
-      codeSnippet:
-        'type Item = { id: number; text: string };\n\nfunction VirtualizedList<T extends { id: number }>({\n  items,\n  itemHeight,\n  height,\n  render,\n}: {\n  items: T[];\n  itemHeight: number;\n  height: number;\n  render: (item: T) => React.ReactNode;\n}) {\n  const [scrollTop, setScrollTop] = React.useState(0);\n\n  const startIndex = Math.floor(scrollTop / itemHeight);\n  const endIndex = Math.min(\n    items.length,\n    Math.ceil((scrollTop + height) / itemHeight)\n  );\n\n  const visibleItems = items.slice(startIndex, endIndex);\n\n  return (\n    <div\n      style={{ overflowY: "auto", height }}\n      onScroll={(e: React.UIEvent<HTMLDivElement>) =>\n        setScrollTop(e.currentTarget.scrollTop)\n      }\n    >\n      <div style={{ height: items.length * itemHeight, position: "relative" }}>\n        {visibleItems.map((item, idx) => (\n          <div\n            key={item.id}\n            style={{\n              position: "absolute",\n              top: (startIndex + idx) * itemHeight,\n              height: itemHeight,\n            }}\n          >\n            {render(item)}\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n}',
     },
     {
       id: 2,
       question:
         "Build a type-safe state machine in TypeScript for a React component ensuring only valid transitions between states.",
-      codeSnippet:
-        'type State = "idle" | "loading" | "success" | "error";\n\ntype Event =\n  | { type: "FETCH" }\n  | { type: "RESOLVE" }\n  | { type: "REJECT" }\n  | { type: "RESET" };\n\nconst transitions: Record<State, Partial<Record<Event["type"], State>>> = {\n  idle: { FETCH: "loading" },\n  loading: { RESOLVE: "success", REJECT: "error" },\n  success: { RESET: "idle" },\n  error: { RESET: "idle" },\n};\n\nfunction reducer(state: State, event: Event): State {\n  return transitions[state][event.type] ?? state;\n}',
     },
     {
       id: 3,
       question:
         "Create a type-safe Event Emitter class in TypeScript supporting strongly typed event payloads.",
-      codeSnippet:
-        "type Events = {\n  message: { text: string };\n  close: void;\n};\n\nclass EventEmitter<E extends Record<string, any>> {\n  private listeners: {\n    [K in keyof E]?: ((payload: E[K]) => void)[];\n  } = {};\n\n  on<K extends keyof E>(event: K, cb: (payload: E[K]) => void) {\n    (this.listeners[event] ||= []).push(cb);\n  }\n\n  emit<K extends keyof E>(event: K, payload: E[K]) {\n    this.listeners[event]?.forEach((cb) => cb(payload));\n  }\n}",
     },
     {
       id: 4,
       question:
         "Build an Infinite Scroll component in React with TypeScript that fetches additional data on reaching the bottom.",
-      codeSnippet:
-        'function InfiniteScroll<T>({\n  fetchMore,\n  render,\n}: {\n  fetchMore: () => Promise<T[]>;\n  render: (item: T) => React.ReactNode;\n}) {\n  const [items, setItems] = React.useState<T[]>([]);\n\n  const handleScroll = async (e: React.UIEvent<HTMLDivElement>) => {\n    const el = e.currentTarget;\n    if (el.scrollTop + el.clientHeight >= el.scrollHeight) {\n      const more = await fetchMore();\n      setItems((prev) => [...prev, ...more]);\n    }\n  };\n\n  return (\n    <div onScroll={handleScroll} style={{ overflowY: "auto", height: 400 }}>\n      {items.map(render)}\n    </div>\n  );\n}',
     },
     {
       id: 5,
       question:
         "Implement a dynamic form builder in React with TypeScript based on a configuration object with validation rules.",
-      codeSnippet:
-        'type Field = {\n  name: string;\n  type: "text" | "number";\n  required?: boolean;\n};\n\nfunction DynamicForm({ fields }: { fields: Field[] }) {\n  const [values, setValues] = React.useState<Record<string, any>>({});\n\n  return (\n    <form>\n      {fields.map((f) => (\n        <input\n          key={f.name}\n          type={f.type}\n          onChange={(e) =>\n            setValues({ ...values, [f.name]: e.target.value })\n          }\n        />\n      ))}\n    </form>\n  );\n}',
     },
     {
       id: 6,
       question:
         "Create a Tree View component in React with TypeScript supporting recursive rendering of nested nodes.",
-      codeSnippet:
-        "type TreeNode = {\n  id: string;\n  name: string;\n  children?: TreeNode[];\n};\n\nfunction Tree({ node }: { node: TreeNode }) {\n  const [open, setOpen] = React.useState(false);\n\n  return (\n    <div>\n      <div onClick={() => setOpen((o) => !o)}>{node.name}</div>\n      {open &&\n        node.children?.map((child) => (\n          <Tree key={child.id} node={child} />\n        ))}\n    </div>\n  );\n}",
     },
     {
       id: 7,
       question:
         "Implement a drag-and-drop list in React with TypeScript allowing reordering of items.",
-      codeSnippet:
-        "type Item = { id: string; text: string };\n\nfunction DragList({ items }: { items: Item[] }) {\n  const [list, setList] = React.useState(items);\n\n  const onDrag = (from: number, to: number) => {\n    const updated = [...list];\n    const [moved] = updated.splice(from, 1);\n    updated.splice(to, 0, moved);\n    setList(updated);\n  };\n\n  return (\n    <div>\n      {list.map((item) => (\n        <div key={item.id} draggable>\n          {item.text}\n        </div>\n      ))}\n    </div>\n  );\n}",
     },
     {
       id: 8,
       question:
         "Set up a fully typed Redux store in TypeScript with actions and reducers for a counter.",
-      codeSnippet:
-        'type State = { count: number };\n\ntype Action = { type: "INC" } | { type: "DEC" };\n\nfunction reducer(state: State = { count: 0 }, action: Action): State {\n  switch (action.type) {\n    case "INC":\n      return { count: state.count + 1 };\n    case "DEC":\n      return { count: state.count - 1 };\n    default:\n      return state;\n  }\n}',
     },
     {
       id: 9,
       question:
         "Build an accessible Modal component in React with TypeScript handling keyboard and focus management.",
-      codeSnippet:
-        'function Modal({\n  isOpen,\n  onClose,\n  children,\n}: {\n  isOpen: boolean;\n  onClose: () => void;\n  children: React.ReactNode;\n}) {\n  React.useEffect(() => {\n    const onKey = (e: KeyboardEvent) => {\n      if (e.key === "Escape") onClose();\n    };\n    window.addEventListener("keydown", onKey);\n    return () => window.removeEventListener("keydown", onKey);\n  }, [onClose]);\n\n  if (!isOpen) return null;\n\n  return <div role="dialog">{children}</div>;\n}',
     },
     {
       id: 10,
       question:
         "Create a typed React Router v6 setup ensuring route params are type-safe.",
-      codeSnippet:
-        "type UserParams = { id: string };\n\nfunction UserPage() {\n  const params = useParams<UserParams>();\n  return <div>User: {params.id}</div>;\n}",
     },
   ],
 };
