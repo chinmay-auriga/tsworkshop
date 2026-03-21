@@ -21,7 +21,7 @@ const TEAM_CREDENTIALS: Record<string, { role: UserRole; password: string }> = {
 };
 
 const TEAM_ALIASES: Record<string, keyof typeof TEAM_CREDENTIALS> = {
-  nishant: 'nishant ke favourite',
+  nishant: 'nishant ke favourites',
   nkf: 'nishant ke favourite',
   'nishant ke favourite': 'nishant ke favourite',
   kapil: 'kapil ke khaas',
