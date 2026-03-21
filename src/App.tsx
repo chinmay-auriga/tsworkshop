@@ -8,6 +8,7 @@ import { LiveStatus } from './components/LiveStatus';
 import { Itinerary } from './components/Itinerary';
 import { RoundContent } from './components/RoundContent';
 import { OtherTeamQuestions } from './components/OtherTeamQuestions';
+import { Leaderboard } from './components/Leaderboard';
 
 function App() {
   const { theme, toggleTheme } = useTheme();
@@ -48,6 +49,7 @@ function App() {
         theme={theme}
         onToggleTheme={toggleTheme}
         onLogout={handleLogout}
+        onLeaderboard={() => setActiveTab('leaderboard')}
       />
       <main className="max-w-5xl mx-auto px-4 py-8">
         <LiveStatus />
@@ -58,7 +60,9 @@ function App() {
           team={team}
         />
         <div className="mt-6">
-          {activeTab === 'itinerary' ? (
+          {activeTab === 'leaderboard' ? (
+            <Leaderboard />
+          ) : activeTab === 'itinerary' ? (
             <Itinerary />
           ) : activeTab === 'other-team' && otherTeam ? (
             <OtherTeamQuestions otherTeam={otherTeam} />

@@ -1,6 +1,6 @@
 import type { Round, UserRole } from '../data';
 
-export type ActiveTab = number | 'itinerary' | 'other-team';
+export type ActiveTab = number | 'itinerary' | 'other-team' | 'leaderboard';
 
 interface RoundTabsProps {
   rounds: Round[];
