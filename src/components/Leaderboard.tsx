@@ -21,7 +21,7 @@ const SCORES: TeamScore[] = [
       { round: 1, score: 0 },
       { round: 2, score: 20 },
     ],
-    total: 0,
+    total: 20,
   },
 ];
 
